@@ -1,24 +1,43 @@
 {
   "expo": {
-    "name": "sekolah",
-    "slug": "sekolah",
+    "name": "Kapur",
+    "slug": "app-sekolah",
+    "description": "Kapur, aplikasi orang tua SD Rindang Jati (rekaan): jadwal, absensi, nilai, tugas, tagihan SPP, dan pesan wali kelas. Demo buatan PintuWeb.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "scheme": "kapur",
+    "userInterfaceStyle": "automatic",
+    "primaryColor": "#1f4a3b",
+    "backgroundColor": "#f6f1e6",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "id.pintuweb.demo.kapur"
     },
     "android": {
+      "package": "id.pintuweb.demo.kapur",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1f4a3b",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "output": "static",
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "lang": "id"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://app-sekolah.pintuweb.id",
+          "sitemap": false
+        }
+      ],
+      "expo-font"
+    ]
   }
 }

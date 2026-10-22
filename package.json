@@ -1,18 +1,34 @@
 {
-  "name": "sekolah",
+  "name": "app-sekolah",
   "version": "1.0.0",
-  "main": "index.js",
-  "dependencies": {
-    "expo": "~58.0.17",
-    "expo-status-bar": "~58.0.4",
-    "react": "19.3.0",
-    "react-native": "0.88.0"
-  },
+  "private": true,
+  "description": "Kapur: demo aplikasi orang tua SD Rindang Jati (rekaan) buatan PintuWeb. React Native + Expo, satu kode untuk Android, iOS, dan web.",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "expo export -p web",
+    "serve": "npx serve dist"
   },
-  "private": true
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "expo": "58.0.17",
+    "expo-constants": "58.0.13",
+    "expo-font": "58.0.9",
+    "expo-linking": "58.0.14",
+    "expo-router": "58.0.25",
+    "expo-status-bar": "58.0.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-safe-area-context": "5.10.1",
+    "react-native-screens": "4.30.0",
+    "react-native-svg": "15.16.0",
+    "react-native-web": "0.21.4"
+  },
+  "devDependencies": {
+    "qrcode": "1.5.4"
+  }
 }

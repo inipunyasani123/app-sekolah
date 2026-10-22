@@ -1,0 +1,21 @@
+{
+  "name": "Kapur, aplikasi orang tua SD Rindang Jati (demo)",
+  "short_name": "Kapur",
+  "description": "Demo aplikasi orang tua buatan PintuWeb: jadwal, absensi, nilai, tugas, tagihan SPP, dan pesan wali kelas. Sekolah dan datanya rekaan.",
+  "lang": "id",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1f4a3b",
+  "background_color": "#f5f0e4",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
