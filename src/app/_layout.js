@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
+import { JUDUL } from '@/lib/judul';
 import { usePathname } from 'expo-router';
 import Navigasi from '@/components/Navigasi';
 import { StatusBar } from 'expo-status-bar';
@@ -18,6 +19,17 @@ const useGaya = buatGaya((c) => StyleSheet.create({
 
 // Rute tanpa navigasi bawah (layar detail dengan tombol kembali).
 const tanpaNav = (p) => p === '/pesan' || p === '/absensi/izin' || p.startsWith('/tagihan/');
+
+/** Web: judul tab ikut berganti saat pindah halaman di dalam aplikasi (HTML statis sudah benar sejak awal). */
+function JudulTab() {
+  const path = usePathname();
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+    const judul = JUDUL[path] ?? JUDUL['/404'];
+    if (document.title !== judul) document.title = judul;
+  }, [path]);
+  return null;
+}
 
 export default function Akar() {
   const g = useGaya();
@@ -42,6 +54,7 @@ export default function Akar() {
   if (!font) return null;
   return (
     <View style={g.akar}>
+      <JudulTab />
       <View style={g.isi}>
         <Navigasi />
       </View>
