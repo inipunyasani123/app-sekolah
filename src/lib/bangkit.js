@@ -624,26 +624,27 @@ export function balasanOtomatis(teks, anak, ms) {
 
 /* ---------- Catatan wali kelas ---------- */
 
+// Catatan singkat (maksimal dua baris tulisan tangan di kartu buku penghubung).
 const CATATAN = {
   nayla: [
-    'Bu, Nayla hari ini membantu menata pojok baca. Terima kasih sudah dibiasakan dari rumah.',
-    'Nayla berani bertanya saat pecahan terasa sulit. Pertanyaannya membantu teman sekelas juga.',
-    'Presentasi kelompok IPAS hari ini runtut. Nayla membagi giliran bicara dengan adil.',
-    'Hari ini Nayla lupa membawa buku tugas. Mohon dibantu cek tas tiap malam, ya, Bu.',
-    'Nayla menulis ringkasan cerita rakyat dengan rapi dan kata-kata sendiri.',
-    'Latihan tembang Gundul-gundul Pacul sudah lancar. Tinggal penghayatan di bait kedua.',
-    'Nayla tadi menemani teman yang sakit ke UKS sampai dijemput. Sikap yang bagus sekali.',
-    'Bekal hari ini habis dan Nayla ikut mengingatkan teman membuang sampah di tempatnya.',
+    'Nayla hari ini membantu menata pojok baca. Terima kasih!',
+    'Nayla berani bertanya saat pecahan terasa sulit. Bagus!',
+    'Presentasi IPAS Nayla runtut dan membagi giliran adil.',
+    'Buku tugas tertinggal. Mohon dicek bersama tiap malam.',
+    'Ringkasan cerita rakyat Nayla rapi, pakai kata sendiri.',
+    'Tembang Gundul-gundul Pacul sudah lancar. Lanjutkan!',
+    'Nayla menemani teman yang sakit ke UKS. Sikap yang baik.',
+    'Bekal habis, dan Nayla ikut mengingatkan buang sampah.',
   ],
   bima: [
-    'Bima hari ini membaca nyaring di depan kelas dengan suara jelas. Hebat!',
-    'Bima sempat menangis saat kalah lomba lari, lalu bangkit dan memberi selamat temannya.',
-    'Hari ini Bima menghitung uang mainan sampai Rp10.000 tanpa bantuan.',
-    'Mohon Bima dibiasakan minum air putih di sekolah. Botolnya masih penuh saat pulang.',
-    'Gambar rumah Joglo Bima rapi, gradasi warnanya bagus. Sudah dipajang di kelas.',
-    'Bima membantu membagikan buku ke teman-teman tanpa disuruh. Terima kasih, Bu.',
-    'Bima sudah bisa menyebut angka 1–10 dalam bahasa Jawa. Ayo lanjut sampai 20.',
-    'Tadi Bima sedikit mengantuk di jam kedua. Semoga tidurnya cukup malam ini.',
+    'Bima membaca nyaring di depan kelas dengan jelas. Hebat!',
+    'Kalah lomba lari, Bima tetap memberi selamat temannya.',
+    'Bima menghitung uang mainan sampai Rp10.000 sendiri.',
+    'Botol minum Bima masih penuh. Mohon dibiasakan minum.',
+    'Gambar Joglo Bima rapi dan sudah dipajang di kelas.',
+    'Bima membagikan buku ke teman tanpa disuruh. Terima kasih.',
+    'Bima sudah bisa angka 1–10 dalam bahasa Jawa. Ayo ke 20!',
+    'Bima agak mengantuk di jam kedua. Semoga tidurnya cukup.',
   ],
 };
 
