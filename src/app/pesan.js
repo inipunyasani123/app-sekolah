@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KepalaRingkas } from '@/components/Kepala';
@@ -12,8 +12,8 @@ import { meta } from '@/lib/seo';
 import { useAnak, useHari, usePesan } from '@/lib/pakai';
 import { ubah } from '@/lib/toko';
 import { GURU, SEKOLAH } from '@/lib/data';
-import { fmtJamDariMs, hariIni, relatifHari, fmtTanggal } from '@/lib/waktu';
-import { balasanOtomatis, jamLayananGuru } from '@/lib/bangkit';
+import { fmtJamDariMs, hariIni, relatifHari, fmtTanggal, msPada } from '@/lib/waktu';
+import { balasanOtomatis, jamLayananGuru, pesanAwal } from '@/lib/bangkit';
 
 export function generateMetadata() {
   return meta(
@@ -62,6 +62,8 @@ export default function Pesan() {
   const h = useHari();
   const guru = GURU[anak.wali];
   const { daftar } = usePesan(anak);
+  // Sebelum data klien siap: isi pesan awal tanpa jam (teksnya tidak bergantung waktu), supaya HTML statis sudah berisi percakapan.
+  const statis = useMemo(() => pesanAwal(anak, '2026-01-05', msPada('2026-01-05', '23.00')), [anak]);
   const { balas } = useLocalSearchParams();
   const [teks, setTeks] = useState('');
   useEffect(() => {
@@ -110,35 +112,27 @@ export default function Pesan() {
               <Teks jenis="kecil">{h ? `${buka ? 'Sedang jam layanan' : 'Di luar jam layanan'}. ${guru.panggil} membalas di jam sekolah, ${SEKOLAH.jamLayanan}.` : `${guru.panggil} membalas di jam sekolah, ${SEKOLAH.jamLayanan}.`}</Teks>
             </View>
           </View>
-          {!h ? (
-            <>
-              <Kerangka tinggi={70} style={{ width: '75%' }} />
-              <Kerangka tinggi={50} style={{ width: '60%', alignSelf: 'flex-end' }} />
-              <Kerangka tinggi={70} style={{ width: '75%' }} />
-            </>
-          ) : (
-            <View role="log" aria-label={`Percakapan dengan ${guru.panggil}`} aria-live="polite" style={{ gap: 8 }}>
-              {daftar.map((m) => {
-                const tgl = hariIni(m.ms);
-                const pemisah = tgl !== tanggalLalu;
-                tanggalLalu = tgl;
-                const saya = m.dari === 'ortu';
-                return (
-                  <View key={m.id} style={{ gap: 8 }}>
-                    {pemisah ? <Text style={g.tanggal}>{['Hari ini', 'Kemarin'].includes(relatifHari(tgl, h.hari)) ? relatifHari(tgl, h.hari) : fmtTanggal(tgl, { tahun: false })}</Text> : null}
-                    <View style={[g.baris, saya && g.barisSaya]}>
-                      {!saya ? <Avatar siapa={anak.wali} ukuran={28} /> : null}
-                      <View style={[g.gelembung, saya ? g.saya : g.guru]}>
-                        {m.otomatis ? <Text style={g.otomatis}>Balasan simulasi</Text> : null}
-                        <Text style={saya ? g.teksSaya : g.teksGuru}>{m.teks}</Text>
-                        <Text style={saya ? g.jamSaya : g.jamGuru}>{`${saya ? 'Kamu' : guru.panggil} · ${fmtJamDariMs(m.ms)}`}</Text>
-                      </View>
+          <View role="log" aria-label={`Percakapan dengan ${guru.panggil}`} aria-live="polite" style={{ gap: 8 }}>
+            {(h ? daftar : statis).map((m) => {
+              const tgl = h ? hariIni(m.ms) : null;
+              const pemisah = h && tgl !== tanggalLalu;
+              tanggalLalu = tgl;
+              const saya = m.dari === 'ortu';
+              return (
+                <View key={m.id} style={{ gap: 8 }}>
+                  {pemisah ? <Text style={g.tanggal}>{['Hari ini', 'Kemarin'].includes(relatifHari(tgl, h.hari)) ? relatifHari(tgl, h.hari) : fmtTanggal(tgl, { tahun: false })}</Text> : null}
+                  <View style={[g.baris, saya && g.barisSaya]}>
+                    {!saya ? <Avatar siapa={anak.wali} ukuran={28} /> : null}
+                    <View style={[g.gelembung, saya ? g.saya : g.guru]}>
+                      {m.otomatis ? <Text style={g.otomatis}>Balasan simulasi</Text> : null}
+                      <Text style={saya ? g.teksSaya : g.teksGuru}>{m.teks}</Text>
+                      <Text style={saya ? g.jamSaya : g.jamGuru}>{h ? `${saya ? 'Kamu' : guru.panggil} · ${fmtJamDariMs(m.ms)}` : (saya ? 'Kamu' : guru.panggil)}</Text>
                     </View>
                   </View>
-                );
-              })}
-            </View>
-          )}
+                </View>
+              );
+            })}
+          </View>
         </View>
       </ScrollView>
       <View style={[g.kaki, Platform.OS === 'web' ? null : { paddingBottom: 12 + inset.bottom }]}>
