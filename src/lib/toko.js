@@ -14,6 +14,9 @@ const AWAL = {
   dibaca: {},
   paraf: {},
   rsvp: {},
+  kabarDibaca: {},
+  sambut: false,
+  terakhir: [],
 };
 
 let state = AWAL;
@@ -59,7 +62,7 @@ export function ubah(fn) {
 }
 
 export function aturUlang() {
-  ubah(() => ({ ...AWAL, tema: state.tema }));
+  ubah(() => ({ ...AWAL, tema: state.tema, sambut: state.sambut }));
 }
 
 export function useToko() {

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Kepala from '@/components/Kepala';
+import { KepalaRingkas } from '@/components/Kepala';
+import { useLocalSearchParams } from 'expo-router';
 import { Teks, Kerangka, Chip } from '@/components/Dasar';
 import Avatar from '@/components/Avatar';
 import Ikon from '@/components/Ikon';
@@ -27,7 +28,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   gulir: { flex: 1 },
   isi: { padding: 16, gap: 8 },
   info: { flexDirection: 'row', gap: 10, alignItems: 'center', padding: 12, borderRadius: 16, backgroundColor: c.kartu, borderWidth: 1, borderColor: c.garis, marginBottom: 6 },
-  tanggal: { alignSelf: 'center', ...berat(700), fontSize: 12, lineHeight: 16, color: c.tinta2, backgroundColor: c.kartu2, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999, marginVertical: 6 },
+  tanggal: { alignSelf: 'center', ...berat(700), fontSize: 13, lineHeight: 17, color: c.tinta2, backgroundColor: c.kartu2, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999, marginVertical: 6 },
   baris: { flexDirection: 'row', gap: 8, alignItems: 'flex-end' },
   barisSaya: { justifyContent: 'flex-end' },
   gelembung: { maxWidth: '80%', borderRadius: 18, paddingHorizontal: 14, paddingVertical: 10, gap: 4 },
@@ -35,11 +36,12 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   saya: { backgroundColor: c.tombol, borderBottomRightRadius: 6 },
   teksGuru: { ...berat(500), fontSize: 15, lineHeight: 21, color: c.tinta },
   teksSaya: { ...berat(500), fontSize: 15, lineHeight: 21, color: c.kapur },
-  jamGuru: { ...berat(500), fontSize: 11.5, lineHeight: 15, color: c.tinta2 },
-  jamSaya: { ...berat(500), fontSize: 11.5, lineHeight: 15, color: c.kapur2, textAlign: 'right' },
-  otomatis: { ...berat(700), fontSize: 11.5, lineHeight: 15, color: c.biru },
+  jamGuru: { ...berat(500), fontSize: 13, lineHeight: 17, color: c.tinta2 },
+  jamSaya: { ...berat(500), fontSize: 13, lineHeight: 17, color: c.kapur, textAlign: 'right', opacity: 0.92 },
+  otomatis: { ...berat(700), fontSize: 13, lineHeight: 17, color: c.biru },
   kaki: { borderTopWidth: 1, borderTopColor: c.garis, backgroundColor: c.kartu, paddingHorizontal: 12, paddingTop: 10, paddingBottom: 12, gap: 10 },
-  cepat: { gap: 8, paddingRight: 12 },
+  cepat: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  pita: { ...berat(600), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   tulis: { flexDirection: 'row', gap: 8, alignItems: 'flex-end' },
   input: { flex: 1, minHeight: 46, maxHeight: 120, borderRadius: 16, borderWidth: 1.5, borderColor: c.garisKuat, paddingHorizontal: 14, paddingVertical: 11, ...berat(500), fontSize: 15, lineHeight: 21, color: c.tinta, backgroundColor: c.kertas },
   kirim: { width: 48, height: 48, borderRadius: 16, backgroundColor: c.pensil, alignItems: 'center', justifyContent: 'center' },
@@ -60,7 +62,11 @@ export default function Pesan() {
   const h = useHari();
   const guru = GURU[anak.wali];
   const { daftar } = usePesan(anak);
+  const { balas } = useLocalSearchParams();
   const [teks, setTeks] = useState('');
+  useEffect(() => {
+    if (balas === 'catatan') setTeks(`Terima kasih atas catatannya, ${guru.panggil}. `);
+  }, [balas, guru.panggil]);
   const gulir = useRef(null);
   const inset = useSafeAreaInsets();
 
@@ -93,7 +99,7 @@ export default function Pesan() {
   let tanggalLalu = null;
   return (
     <KeyboardAvoidingView style={g.akar} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Kepala judul={guru.panggil} sub={guru.peran} kembali="/" pesanTampil={false} />
+      <KepalaRingkas judul={`${guru.panggil} · ${guru.peran.replace('Wali kelas', 'wali kelas')}`} kembali="/" pesanTampil={false} utama />
       <View role="main" style={g.gulir}>
       <ScrollView ref={gulir} style={g.gulir} contentContainerStyle={g.isi} keyboardShouldPersistTaps="handled" tabIndex={0} aria-label="Riwayat pesan">
         <View style={{ gap: 8 }}>
@@ -101,7 +107,7 @@ export default function Pesan() {
             <Avatar siapa={anak.wali} ukuran={44} />
             <View style={{ flex: 1 }}>
               <Teks jenis="tebal">{guru.nama}</Teks>
-              <Teks jenis="kecil">{h ? `${buka ? 'Sedang jam layanan' : 'Di luar jam layanan'} · ${SEKOLAH.jamLayanan}` : `Jam layanan ${SEKOLAH.jamLayanan}`}</Teks>
+              <Teks jenis="kecil">{h ? `${buka ? 'Sedang jam layanan' : 'Di luar jam layanan'}. ${guru.panggil} membalas di jam sekolah, ${SEKOLAH.jamLayanan}.` : `${guru.panggil} membalas di jam sekolah, ${SEKOLAH.jamLayanan}.`}</Teks>
             </View>
           </View>
           {!h ? (
@@ -136,9 +142,9 @@ export default function Pesan() {
         </View>
       </ScrollView>
       <View style={[g.kaki, Platform.OS === 'web' ? null : { paddingBottom: 12 + inset.bottom }]}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={g.cepat}>
+        <View style={g.cepat}>
           {cepatUntuk(anak).map((q) => <Chip key={q} judul={q} label={`Kirim: ${q}`} onPress={() => kirim(q)} />)}
-        </ScrollView>
+        </View>
         <View style={g.tulis}>
           <TextInput
             value={teks}

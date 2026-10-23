@@ -73,11 +73,11 @@ export function KeteranganGrafik({ warna }) {
     <View style={{ flexDirection: 'row', gap: 16, flexWrap: 'wrap', marginTop: 2 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
         <Svg width={26} height={10} viewBox="0 0 26 10"><Line x1={1} x2={25} y1={5} y2={5} stroke={c.merah} strokeWidth={1.6} strokeDasharray="5 4" /></Svg>
-        <Text style={{ fontFamily: F.sans, fontSize: 12.5, lineHeight: 17, color: c.tinta2 }}>{`Batas tuntas ${SEKOLAH.batasTuntas}`}</Text>
+        <Text style={{ fontFamily: F.sans, fontSize: 13, lineHeight: 18, color: c.tinta2 }}>{`Batas tuntas ${SEKOLAH.batasTuntas}`}</Text>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
         <Svg width={12} height={12} viewBox="0 0 12 12"><Circle cx={6} cy={6} r={4.2} fill={c.kartu} stroke={warna} strokeWidth={2} /></Svg>
-        <Text style={{ fontFamily: F.sans, fontSize: 12.5, lineHeight: 17, color: c.tinta2 }}>Sementara semester ini</Text>
+        <Text style={{ fontFamily: F.sans, fontSize: 13, lineHeight: 18, color: c.tinta2 }}>Sementara semester ini</Text>
       </View>
     </View>
   );

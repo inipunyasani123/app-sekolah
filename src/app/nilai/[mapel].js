@@ -5,6 +5,7 @@ import Layar from '@/components/Layar';
 import { Teks, Kartu, Kerangka, Tombol, Lencana } from '@/components/Dasar';
 import { GrafikGaris, KeteranganGrafik } from '@/components/Grafik';
 import Avatar from '@/components/Avatar';
+import Ilustrasi from '@/components/Ilustrasi';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
 import { meta } from '@/lib/seo';
@@ -29,9 +30,9 @@ export function generateMetadata(_req, params) {
 
 const useGaya = buatGaya((c) => StyleSheet.create({
   pen: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: c.garis },
-  kode: { width: 54, ...berat(800), fontSize: 12.5, lineHeight: 17, color: c.tinta2 },
+  kode: { width: 54, ...berat(800), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   penNama: { ...berat(600), fontSize: 14.5, lineHeight: 20, color: c.tinta },
-  penTgl: { ...berat(500), fontSize: 12.5, lineHeight: 17, color: c.tinta2 },
+  penTgl: { ...berat(500), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   angka: { fontFamily: F.serif, fontSize: 24, lineHeight: 28, color: c.tinta, minWidth: 36, textAlign: 'right' },
   kurang: { color: c.merah },
   guru: { flexDirection: 'row', gap: 12, alignItems: 'center' },
@@ -54,7 +55,9 @@ export default function NilaiMapel() {
     const rata = rataRata(pen.map((p) => p.nilai));
     const titik = riwayat.map((r) => ({ label: `${r.tingkat}.${r.nomor}`, nilai: skorSemester(anak, mapel, r.tingkat, r.nomor) }));
     if (rata) titik.push({ label: `${anak.tingkat}.${h.sem.nomor}`, nilai: Math.round(rata), sementara: true });
-    return { pen, rata, titik };
+    const n = titik.length;
+    const selisih = n >= 2 ? titik[n - 1].nilai - titik[n - 2].nilai : null;
+    return { pen, rata, titik, selisih };
   }, [anak, h, mapel, ada, m]);
 
   if (!m) {
@@ -68,10 +71,13 @@ export default function NilaiMapel() {
   return (
     <Layar kepala={{ judul: m.pendek, sub: m.nama !== m.pendek ? m.nama : `Nilai ${anak.panggil}`, kembali: '/nilai' }}>
       {!ada ? (
-        <Kartu style={{ gap: 10 }}>
+        <Kartu style={{ gap: 10, padding: 0, overflow: 'hidden' }}>
+          <Ilustrasi jenis="kosong" tinggi={120} />
+          <View style={{ paddingHorizontal: 16, paddingBottom: 16, gap: 10 }}>
           <Teks jenis="tebal">{`${m.nama} mulai diajarkan di kelas ${m.mulai}.`}</Teks>
           <Teks jenis="kecil">{`${anak.panggil} sekarang kelas ${anak.tingkat}, jadi belum ada nilai untuk mapel ini. Ganti anak lewat tombol di pojok kanan atas.`}</Teks>
           <Tombol href="/nilai" jenis="garis" judul="Lihat mapel lain" />
+          </View>
         </Kartu>
       ) : !data ? (
         <>
@@ -88,6 +94,14 @@ export default function NilaiMapel() {
               </View>
               {data.rata ? <Lencana teks={predikat(data.rata)} warna={data.rata >= SEKOLAH.batasTuntas ? c.hijau : c.merah} latar={data.rata >= SEKOLAH.batasTuntas ? c.hijauTipis : c.merahTipis} /> : null}
             </View>
+            {data.selisih !== null ? (
+              <Lencana
+                teks={data.selisih === 0 ? 'Sama dengan semester lalu' : `${data.selisih > 0 ? '+' : '−'}${Math.abs(data.selisih)} dari semester lalu`}
+                ikon={data.selisih > 0 ? 'nilai' : undefined}
+                warna={data.selisih >= 0 ? c.hijau : c.merah}
+                latar={data.selisih >= 0 ? c.hijauTipis : c.merahTipis}
+              />
+            ) : null}
             <GrafikGaris titik={data.titik} warna={m.warna} label={`Grafik nilai ${m.nama} ${anak.panggil}`} />
             <KeteranganGrafik warna={m.warna} />
           </Kartu>

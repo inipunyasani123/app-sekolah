@@ -147,12 +147,12 @@ export function agenda(hari, sem, anak) {
     if (e.mulai >= sem.mulai && e.mulai <= tambahHari(sem.selesai, 30)) daftar.push(e);
   };
   const sts = tambahHari(sem.mulai, 77);
-  tambah({ id: 'sts', mulai: sts, selesai: tambahHari(sts, 4), judul: 'Sumatif Tengah Semester', jenis: 'akademik', untuk: 'Semua kelas' });
-  tambah({ id: 'rapor-sts', mulai: tambahHari(sts, 12), judul: 'Pembagian rapor tengah semester', jenis: 'akademik', untuk: 'Semua kelas', jam: '08.00–10.00 WIB', lokasi: 'Ruang kelas masing-masing' });
+  tambah({ id: 'sts', mulai: sts, selesai: tambahHari(sts, 4), judul: 'Sumatif Tengah Semester (STS)', jenis: 'ujian', untuk: 'Semua kelas' });
+  tambah({ id: 'rapor-sts', mulai: tambahHari(sts, 12), judul: 'Pembagian rapor tengah semester', jenis: 'rapor', untuk: 'Semua kelas', jam: '08.00–10.00 WIB', lokasi: 'Ruang kelas masing-masing' });
   const sas = tambahHari(sem.selesai, -11);
-  tambah({ id: 'sas', mulai: sas, selesai: tambahHari(sas, 4), judul: 'Sumatif Akhir Semester', jenis: 'akademik', untuk: 'Semua kelas' });
+  tambah({ id: 'sas', mulai: sas, selesai: tambahHari(sas, 4), judul: 'Sumatif Akhir Semester (SAS)', jenis: 'ujian', untuk: 'Semua kelas' });
   tambah({ id: 'classmeeting', mulai: tambahHari(sem.selesai, -4), selesai: tambahHari(sem.selesai, -1), judul: 'Class meeting dan pentas kelas', jenis: 'kegiatan', untuk: 'Semua kelas' });
-  tambah({ id: 'rapor', mulai: sem.selesai, judul: sem.nomor === 2 ? 'Pembagian rapor kenaikan kelas' : 'Pembagian rapor semester ganjil', jenis: 'akademik', untuk: 'Semua kelas', jam: '08.00–11.00 WIB' });
+  tambah({ id: 'rapor', mulai: sem.selesai, judul: sem.nomor === 2 ? 'Pembagian rapor kenaikan kelas' : 'Pembagian rapor semester ganjil', jenis: 'rapor', untuk: 'Semua kelas', jam: '08.00–11.00 WIB' });
   const mulaiLibur = tambahHari(sem.selesai, 1);
   const akhirLibur = tambahHari(sem.mulaiBerikut || (sem.nomor === 1 ? awalGenap(sem.awalTA + 1) : awalGanjil(sem.awalTA + 1)), -1);
   tambah({ id: 'libur', mulai: mulaiLibur, selesai: akhirLibur, judul: 'Libur semester', jenis: 'libur', untuk: 'Semua kelas' });
@@ -181,10 +181,15 @@ export function agenda(hari, sem, anak) {
   return [...unik.values()].sort((a, b) => (a.mulai < b.mulai ? -1 : a.mulai > b.mulai ? 1 : 0));
 }
 
-export const FOTO_KABAR = {
-  literasi: { kunci: 'buku', alt: 'Tumpukan buku bacaan di rak perpustakaan' },
-  kebun: { kunci: 'kebun', alt: 'Bedeng sayuran hijau di kebun' },
-  gigi: { kunci: 'sikat', alt: 'Sikat gigi dan pasta gigi di gelas' },
+// Ilustrasi kapur untuk tiap pengumuman (components/Ilustrasi.js).
+export const ILUS_KABAR = {
+  literasi: { jenis: 'buku', alt: 'Ilustrasi kapur: buku terbuka dengan pembatas kuning' },
+  pertemuan: { jenis: 'pertemuan', alt: 'Ilustrasi kapur: meja dan kursi pertemuan dengan balon percakapan' },
+  gigi: { jenis: 'gigi', alt: 'Ilustrasi kapur: gigi dan sikat gigi' },
+  kebun: { jenis: 'bibit', alt: 'Ilustrasi kapur: baki bibit tanaman di bawah matahari' },
+  sas: { jenis: 'sas', alt: 'Ilustrasi kapur: lembar soal bercentang dan pensil' },
+  kantin: { jenis: 'kantin', alt: 'Ilustrasi kapur: botol air, segelas susu, dan apel' },
+  libur: { jenis: 'libur', alt: 'Ilustrasi kapur: kalender dan matahari' },
 };
 
 export function pengumuman(hari, sem, anak) {
@@ -209,7 +214,7 @@ export function pengumuman(hari, sem, anak) {
   const literasi = cari('literasi');
   if (literasi) {
     daftar.push({
-      id: 'literasi', tanggal: mundur(1), kategori: 'Kegiatan', judul: 'Pekan Literasi dimulai Senin depan', foto: 'literasi',
+      id: 'literasi', tanggal: mundur(1), kategori: 'Kegiatan', judul: 'Pekan Literasi dimulai Senin depan',
       isi: [
         `Pekan Literasi berlangsung ${tg(literasi.mulai)} sampai ${tg(literasi.selesai)}. Setiap pagi pukul 07.00–07.30 ada membaca bersama di halaman sekolah.`,
         'Anak boleh membawa satu buku dari rumah, diberi nama di sampulnya. Buku akan dikembalikan pada hari terakhir.',
@@ -235,7 +240,7 @@ export function pengumuman(hari, sem, anak) {
   const gigi = cari('gigi');
   if (gigi) {
     daftar.push({
-      id: 'gigi', tanggal: mundur(5), kategori: 'Kesehatan', judul: 'Pemeriksaan gigi gratis di UKS', foto: 'gigi',
+      id: 'gigi', tanggal: mundur(5), kategori: 'Kesehatan', judul: 'Pemeriksaan gigi gratis di UKS',
       isi: [
         `Petugas puskesmas akan memeriksa gigi siswa kelas 1–6 pada ${fmtTanggal(gigi.mulai, { tahun: false })}, pukul 08.00–11.00 WIB. Tidak ada biaya.`,
         'Anak cukup sikat gigi seperti biasa di rumah. Hasil pemeriksaan dikirim lewat wali kelas.',
@@ -245,7 +250,7 @@ export function pengumuman(hari, sem, anak) {
   const kebun = cari('kebun');
   if (kebun && anak.tingkat <= 3) {
     daftar.push({
-      id: 'kebun', tanggal: mundur(6), kategori: 'Kegiatan', judul: 'Kunjungan kebun edukasi kelas 1–3', foto: 'kebun',
+      id: 'kebun', tanggal: mundur(6), kategori: 'Kegiatan', judul: 'Kunjungan kebun edukasi kelas 1–3',
       isi: [
         `Kelas 1–3 berkunjung ke kebun edukasi desa pada ${fmtTanggal(kebun.mulai, { tahun: false })}. Berangkat 07.30 dari sekolah dan kembali sekitar 11.00 WIB.`,
         'Anak memakai kaus olahraga, topi, dan membawa botol minum. Iuran Rp60.000 untuk transport dan bibit tanaman yang dibawa pulang.',
@@ -545,10 +550,10 @@ export function tagihan(anak, hari, sem, dibayar = {}) {
   const buku = { id: 'buku', jenis: 'lain', judul: `Buku pendamping semester ${sem.nama.toLowerCase()}`, rincian: 'Paket buku latihan dan lembar kerja untuk satu semester.', nominal: anak.tingkat >= 4 ? 185000 : 150000, terbit: tambahHari(sem.mulai, -10), jatuhTempo: tambahHari(sem.mulai, 4) };
   if (buku.terbit <= hari) daftar.push(buku);
   if (!sem.libur && anak.tingkat >= 4) {
-    daftar.push({ id: 'literasi', jenis: 'lain', judul: 'Iuran pojok baca Pekan Literasi', rincian: 'Untuk buku bacaan baru pojok baca kelas dan hadiah lomba mendongeng.', nominal: 75000, terbit: tambahHari(hari, -1), jatuhTempo: tambahHari(hari, 8) });
+    daftar.push({ id: 'literasi', jenis: 'lain', judul: 'Iuran pojok baca Pekan Literasi', rincian: 'Untuk buku bacaan baru pojok baca kelas dan hadiah lomba mendongeng.', nominal: 75000, terbit: tambahHari(hari, -1), jatuhTempo: tambahHari(hari, 6) });
   }
   if (!sem.libur && anak.tingkat <= 3) {
-    daftar.push({ id: 'kebun', jenis: 'lain', judul: 'Iuran kunjungan kebun edukasi', rincian: 'Transport pulang-pergi dan bibit tanaman yang dibawa pulang anak.', nominal: 60000, terbit: tambahHari(hari, -6), jatuhTempo: tambahHari(hari, 9) });
+    daftar.push({ id: 'kebun', jenis: 'lain', judul: 'Iuran kunjungan kebun edukasi', rincian: 'Transport pulang-pergi dan bibit tanaman yang dibawa pulang anak.', nominal: 60000, terbit: tambahHari(hari, -6), jatuhTempo: tambahHari(hari, 5) });
   }
   const semua = daftar.map((t) => {
     const demo = dibayar[`${anak.id}:${t.id}`];
@@ -615,6 +620,70 @@ export function balasanOtomatis(teks, anak, ms) {
   if (/jemput|pulang|antar/.test(t)) return `Siap, Bu. Saya sampaikan ke petugas gerbang. ${anak.panggil} menunggu di pos satpam sampai dijemput.`;
   if (/terima kasih|makasih|matur nuwun/.test(t)) return 'Sama-sama, Bu Ratna.';
   return `Terima kasih, Bu Ratna. Pesannya sudah saya terima dan akan saya tindak lanjuti.`;
+}
+
+/* ---------- Catatan wali kelas ---------- */
+
+const CATATAN = {
+  nayla: [
+    'Bu, Nayla hari ini membantu menata pojok baca. Terima kasih sudah dibiasakan dari rumah.',
+    'Nayla berani bertanya saat pecahan terasa sulit. Pertanyaannya membantu teman sekelas juga.',
+    'Presentasi kelompok IPAS hari ini runtut. Nayla membagi giliran bicara dengan adil.',
+    'Hari ini Nayla lupa membawa buku tugas. Mohon dibantu cek tas tiap malam, ya, Bu.',
+    'Nayla menulis ringkasan cerita rakyat dengan rapi dan kata-kata sendiri.',
+    'Latihan tembang Gundul-gundul Pacul sudah lancar. Tinggal penghayatan di bait kedua.',
+    'Nayla tadi menemani teman yang sakit ke UKS sampai dijemput. Sikap yang bagus sekali.',
+    'Bekal hari ini habis dan Nayla ikut mengingatkan teman membuang sampah di tempatnya.',
+  ],
+  bima: [
+    'Bima hari ini membaca nyaring di depan kelas dengan suara jelas. Hebat!',
+    'Bima sempat menangis saat kalah lomba lari, lalu bangkit dan memberi selamat temannya.',
+    'Hari ini Bima menghitung uang mainan sampai Rp10.000 tanpa bantuan.',
+    'Mohon Bima dibiasakan minum air putih di sekolah. Botolnya masih penuh saat pulang.',
+    'Gambar rumah Joglo Bima rapi, gradasi warnanya bagus. Sudah dipajang di kelas.',
+    'Bima membantu membagikan buku ke teman-teman tanpa disuruh. Terima kasih, Bu.',
+    'Bima sudah bisa menyebut angka 1–10 dalam bahasa Jawa. Ayo lanjut sampai 20.',
+    'Tadi Bima sedikit mengantuk di jam kedua. Semoga tidurnya cukup malam ini.',
+  ],
+};
+
+/** Catatan wali kelas terbaru: catatan hari ini terbit 30 menit setelah jam pulang. */
+export function catatanGuru(anak, hari, sem, sekarangMs) {
+  let d = hariSekolahSebelum(hari, sem);
+  if (d === hari) {
+    const pulang = jamPulang(anak, hari);
+    if (!pulang || sekarangMs < msPada(hari, menitKeJam(jamKeMenit(pulang) + 30))) d = hariSekolahSebelum(tambahHari(hari, -1), sem);
+  }
+  if (!d) return null;
+  const daftar = CATATAN[anak.id];
+  const i = Math.floor(acak(`${anak.id}-${d}-catatan`) * daftar.length);
+  const pulang = jamPulang(anak, d);
+  return { tanggal: d, teks: daftar[i], guru: GURU[anak.wali], ms: msPada(d, menitKeJam(jamKeMenit(pulang) + 30)) };
+}
+
+/* ---------- Antar-jemput ---------- */
+
+export function antarJemput(anak, hari, sem, sekarangMs) {
+  const a = anak.antar;
+  if (!a) return null;
+  if (!hariSekolah(hari, sem)) {
+    const besok = hariSekolahBerikut(tambahHari(hari, 1), sem);
+    return { ...a, tahap: 'libur', judul: 'Tidak ada antar-jemput hari ini', ket: besok ? `Jemput berikutnya ${fmtTanggal(besok, { tahun: false })}, pukul ${a.jemput} di ${a.titik}.` : 'Antar-jemput mulai lagi saat sekolah masuk.' };
+  }
+  const m = Math.floor(((sekarangMs + 7 * 3600000) % 86400000) / 60000);
+  const pulang = jamPulang(anak, hari);
+  const berangkatPulang = jamKeMenit(pulang) + 10;
+  const sampai = berangkatPulang + a.lama;
+  const tahapan = [
+    { batas: jamKeMenit(a.jemput) - 10, tahap: 'siap', judul: `Jemput pukul ${a.jemput}`, ket: `${a.sopir} menjemput di ${a.titik}. Siapkan ${anak.panggil} 10 menit lebih awal.` },
+    { batas: jamKeMenit(a.tiba), tahap: 'berangkat', judul: 'Di perjalanan ke sekolah', ket: `Perkiraan tiba di sekolah ${a.tiba}.` },
+    { batas: berangkatPulang, tahap: 'sekolah', judul: `${anak.panggil} di sekolah`, ket: `Pulang naik antar-jemput, berangkat dari sekolah ${menitKeJam(berangkatPulang)}.` },
+    { batas: sampai, tahap: 'pulang', judul: 'Di perjalanan pulang', ket: `Perkiraan sampai di ${a.titik} ${menitKeJam(sampai)}.` },
+    { batas: 24 * 60, tahap: 'sampai', judul: 'Sudah sampai rumah', ket: `Diantar sampai ${a.titik} sekitar ${menitKeJam(sampai)}.` },
+  ];
+  const t = tahapan.find((x) => m < x.batas) || tahapan[tahapan.length - 1];
+  const urut = ['siap', 'berangkat', 'sekolah', 'pulang', 'sampai'];
+  return { ...a, ...t, langkah: urut.indexOf(t.tahap), jamPulang: menitKeJam(berangkatPulang) };
 }
 
 export { ANAK };

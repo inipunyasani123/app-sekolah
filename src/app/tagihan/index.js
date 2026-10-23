@@ -23,13 +23,13 @@ export function generateMetadata() {
 
 const useGaya = buatGaya((c) => StyleSheet.create({
   ringkas: { borderRadius: 22, backgroundColor: c.pensil, padding: 18, gap: 4 },
-  ringkasLabel: { ...berat(800), fontSize: 12.5, lineHeight: 17, letterSpacing: 0.4, color: c.pensilTeks },
-  ringkasAngka: { fontFamily: F.serif, fontSize: 38, lineHeight: 46, color: c.pensilTeks },
+  ringkasLabel: { ...berat(800), fontSize: 13, lineHeight: 18, letterSpacing: 0.4, color: c.pensilTeks },
+  ringkasAngka: { fontFamily: F.serif, fontSize: 38, lineHeight: 46, color: c.pensilTeks, fontVariant: ['tabular-nums'] },
   ringkasTeks: { ...berat(600), fontSize: 13.5, lineHeight: 19, color: c.pensilTeks },
   kartu: { borderRadius: 18, backgroundColor: c.kartu, borderWidth: 1, borderColor: c.garis, padding: 14, gap: 6 },
   atas: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 },
   judul: { ...berat(700), fontSize: 15.5, lineHeight: 21, color: c.tinta, flex: 1 },
-  nominal: { fontFamily: F.serif, fontSize: 20, lineHeight: 26, color: c.tinta },
+  nominal: { fontFamily: F.serif, fontSize: 20, lineHeight: 26, color: c.tinta, fontVariant: ['tabular-nums'] },
   ket: { ...berat(500), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   bayar: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', backgroundColor: c.tombol, borderRadius: 12, paddingHorizontal: 14, minHeight: 40, marginTop: 4 },
   bayarTeks: { ...berat(700), fontSize: 14, color: c.kapur },
@@ -87,7 +87,7 @@ export default function Tagihan() {
                 <Text style={g.ket}>{`${rupiah(x.nominal)} · ${x.bayar.metode} · ${fmtTanggal(hariIni(x.bayar.ms), { hari: false, tahun: false })}, ${fmtJamDariMs(x.bayar.ms)}`}</Text>
                 {x.demo ? <Lencana teks="Dibayar di demo ini" warna={c.biru} latar={c.biruTipis} /> : null}
               </View>
-              <Stempel teks="LUNAS" style={{ transform: [{ rotate: '-8deg' }, { scale: 0.78 }] }} />
+              <Stempel teks="LUNAS" miring={-8} skala={0.78} />
             </Tautan>
           ))}
           <Teks jenis="kecil">Pembayaran di Kapur adalah simulasi: tidak ada uang yang berpindah dan nomor rekening atau QR di sini bukan milik bank mana pun.</Teks>

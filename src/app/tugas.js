@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Layar from '@/components/Layar';
-import { Teks, Kerangka, Chip, Lencana } from '@/components/Dasar';
+import { Teks, Kerangka, Chip, Lencana, Tombol } from '@/components/Dasar';
+import Ilustrasi from '@/components/Ilustrasi';
 import Ikon, { Bintang } from '@/components/Ikon';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
@@ -25,8 +26,9 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   kepala: { padding: 14, paddingLeft: 18, gap: 4, minHeight: 64 },
   pita: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 5 },
   atas: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
-  mapel: { ...berat(700), fontSize: 12.5, lineHeight: 17, color: c.tinta2 },
+  mapel: { ...berat(700), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   judul: { ...berat(700), fontSize: 16, lineHeight: 22, color: c.tinta },
+  nilaiAngka: { fontVariant: ['tabular-nums'] },
   tenggat: { ...berat(600), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   mendesak: { color: c.merah },
   detail: { paddingHorizontal: 18, paddingBottom: 14, gap: 10, borderTopWidth: 1, borderTopColor: c.garis, paddingTop: 12 },
@@ -41,6 +43,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   ditekan: { opacity: 0.85 },
   filter: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   catatan: { fontFamily: F.tulis, fontSize: 14, lineHeight: 26, color: c.biru },
+  kosong: { borderRadius: 18, backgroundColor: c.kartu, borderWidth: 1, borderColor: c.garis, overflow: 'hidden' },
 }));
 
 function KartuTugas({ t, hari, cek, onCek }) {
@@ -132,7 +135,14 @@ export default function Tugas() {
       ) : tampil.length ? (
         tampil.map((x) => <KartuTugas key={x.id} t={x} hari={h.hari} cek={cek[x.id]} onCek={() => tandai(x.id)} />)
       ) : (
-        <Teks>{h.sem.libur ? 'Tidak ada tugas selama libur semester.' : 'Tidak ada tugas di daftar ini.'}</Teks>
+        <View style={g.kosong}>
+          <Ilustrasi jenis="kosong" tinggi={120} />
+          <View style={{ padding: 16, gap: 10 }}>
+            <Teks jenis="tebal">{h.sem.libur ? 'Tidak ada tugas selama libur semester.' : filter === 'belum' ? 'Semua tugas sudah dikumpulkan.' : 'Tidak ada tugas di daftar ini.'}</Teks>
+            <Teks jenis="kecil">Tugas baru dari guru muncul di sini lengkap dengan tenggat dan cara mengumpulkan.</Teks>
+            <Tombol href="/jadwal" jenis="garis" ikon="jadwal" judul="Lihat jadwal" />
+          </View>
+        </View>
       )}
     </Layar>
   );

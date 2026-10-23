@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Layar from '@/components/Layar';
-import { Teks, Kerangka, Tautan } from '@/components/Dasar';
+import { Teks, Kerangka, Tautan, Tombol } from '@/components/Dasar';
+import { unduhBerkas } from '@/lib/bagikan';
+import { htmlRapor, namaBerkasRapor } from '@/lib/rapor-berkas';
 import Ikon, { Bintang } from '@/components/Ikon';
 import { Garis } from '@/components/Grafik';
 import { berat, F } from '@/lib/fonts';
@@ -22,15 +24,17 @@ export function generateMetadata() {
 
 const useGaya = buatGaya((c) => StyleSheet.create({
   ringkas: { borderRadius: 22, backgroundColor: c.papan, padding: 18, gap: 4, overflow: 'hidden' },
-  ringkasLabel: { ...berat(700), fontSize: 12.5, lineHeight: 17, letterSpacing: 0.4, color: c.kapur2 },
+  ringkasLabel: { ...berat(700), fontSize: 13, lineHeight: 18, letterSpacing: 0.4, color: c.kapur2 },
   ringkasAngka: { fontFamily: F.serif, fontSize: 52, lineHeight: 58, color: c.kapur },
   ringkasTeks: { ...berat(500), fontSize: 13.5, lineHeight: 19, color: c.kapur2 },
+  distribusi: { flexDirection: 'row', gap: 4, height: 12 },
+  distribusiSel: { flex: 1, borderRadius: 4 },
   rapor: { borderRadius: 18, backgroundColor: c.kartu, borderWidth: 1, borderColor: c.garis, padding: 16, flexDirection: 'row', gap: 14, alignItems: 'center' },
   raporIkon: { width: 48, height: 58, borderRadius: 8, backgroundColor: c.merah, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '-4deg' }] },
   baris: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 14, backgroundColor: c.kartu, borderRadius: 16, borderWidth: 1, borderColor: c.garis, minHeight: 64 },
   titik: { width: 10, height: 34, borderRadius: 5 },
   nama: { ...berat(700), fontSize: 15, lineHeight: 20, color: c.tinta },
-  ket: { ...berat(500), fontSize: 12.5, lineHeight: 17, color: c.tinta2 },
+  ket: { ...berat(500), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   angka: { fontFamily: F.serif, fontSize: 26, lineHeight: 30, color: c.tinta, minWidth: 40, textAlign: 'right' },
   kurang: { color: c.merah },
   ditekan: { opacity: 0.85 },
@@ -41,6 +45,7 @@ export default function Nilai() {
   const c = useWarna();
   const anak = useAnak();
   const h = useHari();
+  const [info, setInfo] = useState('');
   const data = useMemo(() => {
     if (!h) return null;
     const riwayat = riwayatSemester(anak, h.sem);
@@ -51,7 +56,14 @@ export default function Nilai() {
       return { m, pen, rata, jejak: rata ? [...jejak, Math.round(rata)] : jejak };
     });
     const semua = baris.filter((b) => b.rata !== null).map((b) => b.rata);
-    return { baris, rata: rataRata(semua), jumlah: baris.reduce((a, b) => a + b.pen.length, 0), rapor: raporTerakhir(anak, h.sem) };
+    return {
+      baris,
+      rata: rataRata(semua),
+      jumlah: baris.reduce((a, b) => a + b.pen.length, 0),
+      adaNilai: semua.length,
+      tuntas: semua.filter((n) => n >= SEKOLAH.batasTuntas).length,
+      rapor: raporTerakhir(anak, h.sem),
+    };
   }, [anak, h]);
   return (
     <Layar kepala={{ judul: 'Nilai dan rapor', sub: h ? `${anak.panggil} · semester ${h.sem.nama.toLowerCase()} ${h.sem.ta}` : `${anak.panggil} · kelas ${kelasAnak(anak)}` }}>
@@ -75,6 +87,29 @@ export default function Nilai() {
                 ? `Dari ${data.jumlah} penilaian sumatif di ${data.baris.filter((b) => b.rata).length} mapel. Batas tuntas ${SEKOLAH.batasTuntas}.`
                 : 'Penilaian semester ini belum diunggah guru.'}
             </Text>
+            {data.jumlah ? (
+              <View style={{ marginTop: 8, gap: 6 }}>
+                <View style={g.distribusi} role="img" aria-label={`${data.tuntas} dari ${data.adaNilai} mapel mencapai batas tuntas`}>
+                  {data.baris.filter((b) => b.rata).map((b) => (
+                    <View key={b.m} style={[g.distribusiSel, { backgroundColor: b.rata >= SEKOLAH.batasTuntas ? '#a7d9b2' : '#ee9c8c' }]} />
+                  ))}
+                </View>
+                <Text style={g.ringkasTeks}>{`${data.tuntas} dari ${data.adaNilai} mapel sudah tuntas${data.adaNilai - data.tuntas ? `, ${data.adaNilai - data.tuntas} perlu pendampingan` : ''}.`}</Text>
+              </View>
+            ) : null}
+            {data.rapor ? (
+              <Tombol
+                jenis="pensil"
+                ikon="unduh"
+                judul="Unduh rapor semester lalu"
+                style={{ marginTop: 10, alignSelf: 'flex-start' }}
+                onPress={async () => {
+                  const r = await unduhBerkas(namaBerkasRapor(anak, data.rapor), htmlRapor(anak, data.rapor));
+                  setInfo(r === 'diunduh' ? 'Rapor simulasi diunduh (berkas HTML, bisa dicetak atau disimpan sebagai PDF).' : r === 'dibagikan' ? 'Ringkasan rapor dibagikan.' : 'Perangkat ini tidak mendukung unduhan.');
+                }}
+              />
+            ) : null}
+            {info ? <Text style={g.ringkasTeks} aria-live="polite">{info}</Text> : null}
           </View>
           {data.rapor ? (
             <Tautan href="/nilai/rapor" style={g.rapor} styleTekan={g.ditekan}>

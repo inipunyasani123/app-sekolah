@@ -16,6 +16,7 @@ import { fmtTanggal, rupiah, hariIni, fmtJamDariMs } from '@/lib/waktu';
 import { tagihan, SEMUA_ID_TAGIHAN, nomorVA, nomorBukti } from '@/lib/bangkit';
 import { QR_BAYAR } from '@/lib/qr-bayar';
 import { bagikanTeks, salinTeks } from '@/lib/bagikan';
+import { getar } from '@/lib/getar';
 
 export function generateStaticParams() {
   return SEMUA_ID_TAGIHAN.map((id) => ({ id }));
@@ -36,24 +37,24 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   baris: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 7 },
   kunci: { ...berat(500), fontSize: 13.5, lineHeight: 19, color: c.tinta2 },
   nilai: { ...berat(700), fontSize: 13.5, lineHeight: 19, color: c.tinta, flexShrink: 1, textAlign: 'right' },
-  nominal: { fontFamily: F.serif, fontSize: 36, lineHeight: 42, color: c.tinta },
+  nominal: { fontFamily: F.serif, fontSize: 36, lineHeight: 42, color: c.tinta, fontVariant: ['tabular-nums'] },
   metode: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 16, borderWidth: 1.5, borderColor: c.garis, backgroundColor: c.kartu, minHeight: 64 },
   metodeAktif: { borderColor: c.tombol, borderWidth: 2, backgroundColor: c.hijauTipis },
   bulat: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: c.garisKuat, alignItems: 'center', justifyContent: 'center' },
   bulatAktif: { borderColor: c.tombol },
   bulatIsi: { width: 10, height: 10, borderRadius: 5, backgroundColor: c.tombol },
   metodeJudul: { ...berat(700), fontSize: 15, lineHeight: 20, color: c.tinta },
-  metodeKet: { ...berat(500), fontSize: 12.5, lineHeight: 17, color: c.tinta2 },
+  metodeKet: { ...berat(500), fontSize: 13, lineHeight: 18, color: c.tinta2 },
   qrBingkai: { alignSelf: 'center', padding: 14, backgroundColor: '#ffffff', borderRadius: 18, borderWidth: 1, borderColor: c.garis },
   hitung: { ...berat(800), fontSize: 15, color: c.merah, textAlign: 'center', fontVariant: ['tabular-nums'] },
   va: { fontFamily: F.serif, fontSize: 24, lineHeight: 30, color: c.tinta, letterSpacing: 1 },
   langkah: { flexDirection: 'row', gap: 10 },
   langkahNo: { width: 24, height: 24, borderRadius: 12, backgroundColor: c.kartu2, alignItems: 'center', justifyContent: 'center' },
-  langkahNoTeks: { ...berat(800), fontSize: 12.5, color: c.tinta },
+  langkahNoTeks: { ...berat(800), fontSize: 13, color: c.tinta },
   struk: { backgroundColor: c.kartu, borderRadius: 18, borderWidth: 1, borderColor: c.garis, overflow: 'hidden' },
   strukAtas: { padding: 18, alignItems: 'center', gap: 6, backgroundColor: c.papan },
   strukJudul: { ...berat(800), fontSize: 13, letterSpacing: 0.6, color: c.kapur2 },
-  strukNominal: { fontFamily: F.serif, fontSize: 34, lineHeight: 40, color: c.kapur },
+  strukNominal: { fontFamily: F.serif, fontSize: 34, lineHeight: 40, color: c.kapur, fontVariant: ['tabular-nums'] },
   sobek: { flexDirection: 'row', alignItems: 'center', height: 20 },
   lubang: { width: 20, height: 20, borderRadius: 10, backgroundColor: c.kertas },
   putus: { flex: 1, height: 0, borderTopWidth: 2, borderTopColor: c.garis, borderStyle: 'dashed' },
@@ -84,7 +85,7 @@ function HitungMundur({ sampai }) {
   return <Text style={g.hitung}>{sisa ? `Selesaikan dalam ${mm}:${ss}` : 'Waktu habis, buat kode baru'}</Text>;
 }
 
-function Bukti({ t, anak }) {
+function Bukti({ t, anak, baru }) {
   const g = useGaya();
   const c = useWarna();
   const [pesan, setPesan] = useState('');
@@ -111,7 +112,7 @@ function Bukti({ t, anak }) {
           <Baris k="Nomor bukti" v={t.bayar.nomor} />
           <Baris k="Penerima" v={SEKOLAH.nama} />
           <View style={{ alignItems: 'flex-end', marginTop: 6 }}>
-            <Stempel teks="LUNAS" style={{ alignSelf: 'flex-end' }} />
+            <Stempel teks="LUNAS" style={{ alignSelf: 'flex-end' }} animasi={baru} />
           </View>
         </View>
       </View>
@@ -120,7 +121,8 @@ function Bukti({ t, anak }) {
         setPesan({ dibagikan: 'Bukti sudah dibagikan.', disalin: 'Teks bukti disalin ke papan klip.', batal: '', gagal: 'Perangkat ini tidak mendukung berbagi.' }[r]);
       }} />
       {pesan ? <Text style={g.catatan} aria-live="polite">{pesan}</Text> : null}
-      <Tombol href="/tagihan" judul="Kembali ke tagihan" />
+      <Tombol href="/tagihan" judul="Lihat tagihan lainnya" />
+      <Tombol href="/" jenis="garis" ikon="rumah" judul="Kembali ke beranda" />
       <Teks jenis="kecil">Bukti ini contoh dari simulasi. Tidak ada transaksi sungguhan.</Teks>
     </>
   );
@@ -137,6 +139,7 @@ export default function DetailTagihan() {
   const [tahap, setTahap] = useState('pilih');
   const [batas, setBatas] = useState(0);
   const [pesanSalin, setPesanSalin] = useState('');
+  const [baruLunas, setBaruLunas] = useState(false);
   const t = useMemo(() => (h ? tagihan(anak, h.hari, h.sem, toko.bayar).find((x) => x.id === id) : null), [anak, h, toko.bayar, id]);
   useEffect(() => setTahap('pilih'), [anak.id]);
 
@@ -146,6 +149,8 @@ export default function DetailTagihan() {
       const ms = Date.now();
       const bayar = { ms, metode: metode === 'qris' ? 'QRIS' : 'Transfer virtual account', nomor: nomorBukti(anak, id, hariIni(ms)) };
       ubah((s) => ({ ...s, bayar: { ...s.bayar, [`${anak.id}:${id}`]: bayar } }));
+      getar('sukses');
+      setBaruLunas(true);
       setTahap('pilih');
     }, 1400);
   };
@@ -165,7 +170,7 @@ export default function DetailTagihan() {
           <Tombol href="/tagihan" jenis="garis" judul="Lihat semua tagihan" />
         </Kartu>
       ) : t.status === 'lunas' ? (
-        <Bukti t={t} anak={anak} />
+        <Bukti t={t} anak={anak} baru={baruLunas} />
       ) : tahap === 'pilih' ? (
         <>
           <Kartu style={{ gap: 2 }}>

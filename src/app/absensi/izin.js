@@ -33,7 +33,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   cekTeks: { ...berat(600), fontSize: 14.5, lineHeight: 20, color: c.tinta, flex: 1 },
   surat: { fontFamily: F.tulis, fontSize: 14.5, lineHeight: 28, color: c.biru },
   ditekan: { opacity: 0.85 },
-  hitung: { ...berat(500), fontSize: 12.5, color: c.tinta2, marginTop: 4, textAlign: 'right' },
+  hitung: { ...berat(500), fontSize: 13, color: c.tinta2, marginTop: 4, textAlign: 'right' },
 }));
 
 export default function Izin() {

@@ -57,6 +57,7 @@ export const ANAK = [
     ekskul: ['Futsal mini', 'Menggambar'],
     kesehatan: 'Tidak ada catatan khusus.',
     jemput: 'Ikut antar-jemput sekolah, rute Mojoroto',
+    antar: { rute: 'Mojoroto', sopir: 'Pak Harjono', nopol: 'AG 0000 RJ', jemput: '06.15', tiba: '06.45', lama: 35, titik: 'depan gang Kenanga' },
     spp: 325000,
     lahir: 'Kediri, 2 Agustus',
     gerbang: 'Kartu gerbang 02-0112',

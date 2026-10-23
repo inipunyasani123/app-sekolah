@@ -1,4 +1,5 @@
-import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet, Platform, Animated } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { F, berat } from '@/lib/fonts';
@@ -8,8 +9,9 @@ import { kelasAnak } from '@/lib/data';
 import { aturPengalih } from '@/lib/ui';
 import Ikon from './Ikon';
 import { Tautan } from './Dasar';
-import Avatar from './Avatar';
+import Avatar, { Logo } from './Avatar';
 import { Svg, Path, Rect } from './svg';
+import { kurangiGerak } from '@/lib/gerak';
 
 // Teks khusus pembaca layar (tidak terlihat).
 const SR = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0 };
@@ -22,15 +24,20 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   ditekan: { opacity: 0.75 },
   chip: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 4, paddingRight: 10, minHeight: 44, borderRadius: 999, backgroundColor: 'rgba(245,240,228,0.12)', borderWidth: 1, borderColor: 'rgba(245,240,228,0.22)' },
   chipNama: { ...berat(700), fontSize: 14, lineHeight: 18, color: c.kapur },
-  chipKelas: { ...berat(500), fontSize: 12, lineHeight: 15, color: c.kapur2 },
+  chipKelas: { ...berat(500), fontSize: 13, lineHeight: 16, color: c.kapur2 },
+  chipRingkas: { paddingRight: 8, gap: 4 },
   lencana: { position: 'absolute', top: 5, right: 5, minWidth: 18, height: 18, borderRadius: 9, backgroundColor: c.pensil, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
-  lencanaTeks: { ...berat(800), fontSize: 11, lineHeight: 14, color: c.pensilTeks },
+  lencanaTeks: { ...berat(800), fontSize: 12, lineHeight: 15, color: c.pensilTeks },
   sub: { ...berat(600), fontSize: 13, lineHeight: 18, color: c.kapur2, marginTop: 10 },
   judul: { fontFamily: F.serif, fontSize: 26, lineHeight: 32, color: c.kapur, marginTop: 2 },
   judulBesar: { fontSize: 30, lineHeight: 36 },
   merek: { fontFamily: F.tulis, fontSize: 19, lineHeight: 28, color: c.kapur, marginLeft: 2 },
   lis: { height: 9, backgroundColor: '#7b5134', borderTopWidth: 2, borderTopColor: '#5e3c25' },
   coretan: { position: 'absolute', top: 0, right: 0, opacity: 0.5 },
+  ringkas: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 20, backgroundColor: c.papan, boxShadow: '0 6px 14px -8px rgba(0,0,0,0.45)' },
+  papanUtama: { backgroundColor: c.papan, zIndex: 20 },
+  ringkasIsi: { paddingHorizontal: 12, paddingVertical: 6, flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 56 },
+  ringkasJudul: { flex: 1, fontFamily: F.serif, fontSize: 19, lineHeight: 24, color: c.kapur },
 }));
 
 function Coretan() {
@@ -63,7 +70,7 @@ export function Lis() {
   );
 }
 
-function PengalihAnak() {
+function PengalihAnak({ ringkas }) {
   const g = useGaya();
   const c = useWarna();
   const anak = useAnak();
@@ -72,16 +79,81 @@ function PengalihAnak() {
       role="button"
       aria-haspopup="dialog"
       onPress={() => aturPengalih(true)}
-      style={({ pressed }) => [g.chip, pressed && g.ditekan]}
+      style={({ pressed }) => [g.chip, ringkas && g.chipRingkas, pressed && g.ditekan]}
     >
-      <Avatar siapa={anak.id} ukuran={34} />
-      <View>
-        <Text style={g.chipNama}>{anak.panggil}</Text>
-        <Text style={g.chipKelas}>Kelas {kelasAnak(anak)}</Text>
-        <Text style={SR}>, ganti anak</Text>
-      </View>
+      <Avatar siapa={anak.id} ukuran={ringkas ? 32 : 34} />
+      {ringkas ? (
+        <Text style={SR}>{`${anak.panggil} kelas ${kelasAnak(anak)}, ganti anak`}</Text>
+      ) : (
+        <View>
+          <Text style={g.chipNama}>{anak.panggil}</Text>
+          <Text style={g.chipKelas}>Kelas {kelasAnak(anak)}</Text>
+          <Text style={SR}>, ganti anak</Text>
+        </View>
+      )}
       <Ikon nama="bawah" ukuran={16} warna={c.kapur2} tebal={2.2} />
     </Pressable>
+  );
+}
+
+function useBalik(kembali) {
+  const router = useRouter();
+  return () => {
+    if (router.canGoBack()) router.back();
+    else router.replace(kembali);
+  };
+}
+
+function Kiri({ kembali, ringkas }) {
+  const g = useGaya();
+  const c = useWarna();
+  const balik = useBalik(kembali);
+  if (kembali) {
+    return (
+      <Pressable role="button" aria-label="Kembali" onPress={balik} style={({ pressed }) => [g.tombolIkon, pressed && g.ditekan]}>
+        <Ikon nama="kembali" ukuran={22} warna={c.kapur} tebal={2.2} />
+      </Pressable>
+    );
+  }
+  if (ringkas) {
+    return (
+      <Tautan href="/" aria-label="Kapur, ke beranda" style={g.tombolIkon} styleTekan={g.ditekan}>
+        <Logo ukuran={32} />
+      </Tautan>
+    );
+  }
+  return (
+    <Link href="/" aria-label="Kapur, ke beranda" style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44 }}>
+      <Text style={g.merek}>Kapur</Text>
+    </Link>
+  );
+}
+
+/**
+ * Bilah papan ringkas (56 px + lis). utama = kepala halaman (banner + h1), misalnya di Pesan;
+ * selain itu muncul di atas isi setelah kepala besar tergulir.
+ */
+export function KepalaRingkas({ judul, kembali, anakTampil = true, pesanTampil = true, utama = false }) {
+  const g = useGaya();
+  const inset = useSafeAreaInsets();
+  const muncul = useRef(new Animated.Value(utama || kurangiGerak() ? 1 : 0)).current;
+  useEffect(() => {
+    if (utama) return;
+    Animated.timing(muncul, { toValue: 1, duration: kurangiGerak() ? 0 : 160, useNativeDriver: Platform.OS !== 'web' }).start();
+  }, [muncul, utama]);
+  const peran = utama ? { role: 'banner' } : { role: 'navigation', 'aria-label': 'Bilah ringkas' };
+  return (
+    <Animated.View {...peran} style={[utama ? g.papanUtama : g.ringkas, { opacity: muncul, transform: [{ translateY: muncul.interpolate({ inputRange: [0, 1], outputRange: [-8, 0] }) }] }]}>
+      <View dataSet={{ amanAtas: '' }} style={Platform.OS === 'web' ? null : { paddingTop: inset.top }}>
+        <View style={g.ringkasIsi}>
+          <Kiri kembali={kembali} ringkas />
+          <Text {...(utama ? { role: 'heading', 'aria-level': 1 } : null)} numberOfLines={1} style={g.ringkasJudul}>{judul}</Text>
+          {pesanTampil ? <TombolPesan /> : null}
+          {anakTampil ? <PengalihAnak ringkas /> : null}
+        </View>
+      </View>
+      <Lis />
+    </Animated.View>
   );
 }
 
@@ -104,28 +176,14 @@ function TombolPesan() {
 
 export default function Kepala({ judul, sub, kembali, besar, anakTampil = true, pesanTampil = true, children }) {
   const g = useGaya();
-  const c = useWarna();
-  const router = useRouter();
   const inset = useSafeAreaInsets();
-  const balik = () => {
-    if (router.canGoBack()) router.back();
-    else router.replace(kembali);
-  };
   return (
     <View role="banner" style={g.papan}>
       <Coretan />
       <View dataSet={{ amanAtas: '' }} style={Platform.OS === 'web' ? null : { paddingTop: inset.top }}>
         <View style={g.isi}>
           <View style={g.atas}>
-            {kembali ? (
-              <Pressable role="button" aria-label="Kembali" onPress={balik} style={({ pressed }) => [g.tombolIkon, pressed && g.ditekan]}>
-                <Ikon nama="kembali" ukuran={22} warna={c.kapur} tebal={2.2} />
-              </Pressable>
-            ) : (
-              <Link href="/" aria-label="Kapur, ke beranda" style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44 }}>
-                <Text style={g.merek}>Kapur</Text>
-              </Link>
-            )}
+            <Kiri kembali={kembali} />
             <View style={{ flex: 1 }} />
             {pesanTampil ? <TombolPesan /> : null}
             {anakTampil ? <PengalihAnak /> : null}

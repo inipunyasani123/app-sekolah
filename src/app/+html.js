@@ -40,9 +40,10 @@ html [data-aman-atas]{padding-top:env(safe-area-inset-top,0px)}
 .panggung a:focus-visible{outline-color:#f2b632!important}
 input:focus-visible,textarea:focus-visible{outline-offset:0}
 ::selection{background:#f2b632;color:#2b2209}
-.bilah-demo{flex:none;display:block;margin:0;padding:9px 14px calc(9px + env(safe-area-inset-bottom,0px));background:#0f1b33;color:#dfe6f3;font:400 13px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center}
+.bilah-demo{flex:none;display:block;margin:0;padding:5px 12px calc(5px + env(safe-area-inset-bottom,0px));background:#0f1b33;color:#dfe6f3;font:400 12px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center}
 .bilah-demo a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 @media (min-width:768px){
+  .bilah-demo{padding:9px 14px;font-size:13px;line-height:1.5}
   body{background-color:#1c4335;background-image:radial-gradient(1100px 520px at 12% 6%,rgba(245,240,228,.07),transparent 62%),radial-gradient(900px 460px at 88% 92%,rgba(245,240,228,.06),transparent 60%),radial-gradient(520px 180px at 64% 28%,rgba(245,240,228,.04),transparent 70%),${BUTIR}}
   .panggung{display:grid;grid-template-columns:auto minmax(0,350px);justify-content:center;align-content:safe center;align-items:safe center;gap:clamp(32px,5vw,72px);padding:24px 28px;overflow:auto}
   .ponsel{flex:none;width:390px;height:min(844px,calc(100dvh - 92px));min-height:560px;padding:11px;box-sizing:border-box;border-radius:58px;background:#0b0f0d;box-shadow:0 0 0 1.5px #2b332f,0 0 0 7px #121815,0 30px 60px -18px rgba(0,0,0,.6),0 12px 24px rgba(0,0,0,.25)}
@@ -56,7 +57,7 @@ input:focus-visible,textarea:focus-visible{outline-offset:0}
   .p-label{margin:0;font:700 12px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#c9d8cd}
   .p-merek{margin:0;font:400 44px/1.32 "Playwrite ID","Segoe Print",cursive;color:#f5f0e4}
   .p-merek span{display:inline-block;width:46px;height:8px;margin-left:10px;border-radius:3px;background:#f2b632;transform:rotate(-14deg) translateY(-10px)}
-  .p-sub{margin:2px 0 0;font:400 20px/1.3 "Young Serif","Young Serif Fallback",Georgia,serif;color:#f5f0e4}
+  .p-sub{margin:10px 0 0;font:400 20px/1.3 "Young Serif","Young Serif Fallback",Georgia,serif;color:#f5f0e4}
   .p-sub small{display:block;margin-top:4px;font:500 13px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;color:#c9d8cd}
   .p-isi{margin:0;font:400 15px/1.6 "Plus Jakarta Sans",system-ui,sans-serif;color:#e4ece6}
   .p-fitur{margin:0;padding:0;list-style:none;display:grid;gap:8px;counter-reset:f}

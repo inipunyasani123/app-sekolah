@@ -19,3 +19,20 @@ export async function salinTeks(teks) {
     return 'gagal';
   }
 }
+
+/** Unduh berkas buatan klien (mis. rapor HTML simulasi). */
+export function unduhBerkas(nama, isi, jenis = 'text/html') {
+  try {
+    const url = URL.createObjectURL(new Blob([isi], { type: `${jenis};charset=utf-8` }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nama;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return Promise.resolve('diunduh');
+  } catch {
+    return Promise.resolve('gagal');
+  }
+}

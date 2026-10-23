@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Layar from '@/components/Layar';
 import { Teks, Kartu, Kerangka, Tombol, Lencana, STATUS_ABSEN, warnaStatus } from '@/components/Dasar';
 import Ikon from '@/components/Ikon';
+import GridBulan from '@/components/Kalender';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
 import { meta } from '@/lib/seo';
@@ -26,7 +27,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   hitung: { flexDirection: 'row', gap: 8, flexWrap: 'wrap', marginTop: 8 },
   kotakHitung: { flex: 1, minWidth: 70, borderRadius: 14, paddingVertical: 8, alignItems: 'center' },
   kotakAngka: { fontFamily: F.serif, fontSize: 22, lineHeight: 28 },
-  kotakLabel: { ...berat(700), fontSize: 12, lineHeight: 16 },
+  kotakLabel: { ...berat(700), fontSize: 13, lineHeight: 17 },
   bulanBaris: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   panah: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: c.garis },
   mati: { opacity: 0.35 },
@@ -36,7 +37,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   selAngka: { ...berat(700), fontSize: 13.5, lineHeight: 18, color: c.tinta },
   selLibur: { color: c.tinta2, ...berat(500) },
   selHariIni: { borderWidth: 2, borderColor: c.tinta },
-  namaHari: { width: `${100 / 7}%`, ...berat(700), fontSize: 11.5, lineHeight: 16, color: c.tinta2, textAlign: 'center', paddingBottom: 4 },
+  namaHari: { width: `${100 / 7}%`, ...berat(700), fontSize: 13, lineHeight: 17, color: c.tinta2, textAlign: 'center', paddingBottom: 4 },
   legenda: { flexDirection: 'row', gap: 12, flexWrap: 'wrap', marginTop: 8 },
   legendaItem: { flexDirection: 'row', gap: 6, alignItems: 'center' },
   legendaKotak: { width: 14, height: 14, borderRadius: 4 },
@@ -56,10 +57,6 @@ function KalenderBulan({ daftar, hari, sem, anak }) {
   const bisaMundur = idx(bulan) > mulai.y * 12 + mulai.m;
   const bisaMaju = idx(bulan) < akhir.y * 12 + akhir.m;
   const peta = useMemo(() => Object.fromEntries(daftar.map((e) => [e.tanggal, e])), [daftar]);
-  const n = jumlahHari(bulan.tahun, bulan.bulan);
-  const pertama = isoDari(bulan.tahun, bulan.bulan, 1);
-  const kosong = (hariKe(pertama) + 6) % 7;
-  const sel = [...Array(kosong).fill(null), ...Array.from({ length: n }, (_, i) => isoDari(bulan.tahun, bulan.bulan, i + 1))];
   const catatan = daftar.filter((e) => e.tanggal.startsWith(`${bulan.tahun}-${String(bulan.bulan).padStart(2, '0')}`) && (e.status !== 'H' || e.telat) && e.status !== 'belum');
   const warnaSel = (e) => {
     if (!e) return null;
@@ -79,29 +76,23 @@ function KalenderBulan({ daftar, hari, sem, anak }) {
           <Ikon nama="kanan" ukuran={20} warna={c.tinta} />
         </Pressable>
       </View>
-      <View aria-hidden>
-        <View style={g.grid}>
-          {['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map((d) => (
-            <Text key={d} style={g.namaHari}>{d}</Text>
-          ))}
-        </View>
-        <View style={g.grid}>
-          {sel.map((d, i) => {
-            if (!d) return <View key={`k${i}`} style={g.sel} />;
-            const e = peta[d];
-            const sekolah = hariSekolah(d, sem);
-            return (
-              <View key={d} style={g.sel}>
-                <View style={[g.selIsi, { backgroundColor: warnaSel(e) || 'transparent' }, d === hari && g.selHariIni]}>
-                  <Text style={[g.selAngka, !sekolah && g.selLibur]}>{pecah(d).d}</Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      </View>
+      <GridBulan
+        tahun={bulan.tahun}
+        bulan={bulan.bulan}
+        hariIni={hari}
+        label={`Kehadiran ${anak.panggil}, ${BULAN[bulan.bulan - 1]} ${bulan.tahun}`}
+        sel={(d) => {
+          const e = peta[d];
+          const sekolah = hariSekolah(d, sem);
+          if (!e || e.status === 'belum') return { redup: !sekolah, label: `${fmtTanggal(d, { tahun: false })}: ${sekolah ? (e ? 'belum tercatat' : 'hari sekolah') : 'libur'}` };
+          const kunci = e.telat ? 'T' : e.status;
+          const nama = { H: 'hadir', T: `hadir, terlambat ${e.telat} menit`, S: 'sakit', I: 'izin', A: 'alpa' }[kunci];
+          const warnaHuruf = { H: c.hijau, T: c.kuning, S: c.merah, I: c.kuning, A: c.tinta2 }[kunci];
+          return { latar: warnaSel(e), huruf: kunci, warnaHuruf, label: `${fmtTanggal(d, { tahun: false })}: ${nama}${e.mendatang ? ' (diajukan)' : ''}` };
+        }}
+      />
       <View style={g.legenda}>
-        {[['Hadir', c.hijauTipis], ['Terlambat / izin', c.kuningTipis], ['Sakit', c.merahTipis]].map(([t, w]) => (
+        {[['H · Hadir', c.hijauTipis], ['T · Terlambat, I · Izin', c.kuningTipis], ['S · Sakit', c.merahTipis]].map(([t, w]) => (
           <View key={t} style={g.legendaItem}>
             <View style={[g.legendaKotak, { backgroundColor: w, borderWidth: 1, borderColor: c.garisKuat }]} />
             <Teks jenis="kecil">{t}</Teks>

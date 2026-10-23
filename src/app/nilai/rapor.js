@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { bagikanTeks } from '@/lib/bagikan';
+import { bagikanTeks, unduhBerkas } from '@/lib/bagikan';
+import { htmlRapor, namaBerkasRapor } from '@/lib/rapor-berkas';
 import Layar from '@/components/Layar';
 import { Teks, Kerangka, Tombol } from '@/components/Dasar';
 import { Stempel } from '@/components/Kertas';
@@ -24,13 +25,13 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   kertas: { backgroundColor: c.kartu, borderRadius: 6, borderWidth: 1, borderColor: c.garis, padding: 16, gap: 12, boxShadow: `0 10px 24px -14px ${c.bayang}` },
   kop: { alignItems: 'center', gap: 2, paddingBottom: 10, borderBottomWidth: 2, borderBottomColor: c.tinta },
   kopSekolah: { fontFamily: F.serif, fontSize: 19, lineHeight: 24, color: c.tinta, textAlign: 'center' },
-  kopKecil: { ...berat(600), fontSize: 11.5, lineHeight: 16, color: c.tinta2, textAlign: 'center', letterSpacing: 0.6 },
+  kopKecil: { ...berat(600), fontSize: 13, lineHeight: 17, color: c.tinta2, textAlign: 'center', letterSpacing: 0.6 },
   identitas: { gap: 3 },
   idBaris: { flexDirection: 'row', gap: 8 },
   idKunci: { width: 104, ...berat(500), fontSize: 13, lineHeight: 19, color: c.tinta2 },
   idNilai: { flex: 1, ...berat(700), fontSize: 13, lineHeight: 19, color: c.tinta },
   tabelKepala: { flexDirection: 'row', backgroundColor: c.kartu2, paddingVertical: 6, paddingHorizontal: 8, borderRadius: 4 },
-  th: { ...berat(800), fontSize: 11.5, lineHeight: 16, color: c.tinta2, letterSpacing: 0.4 },
+  th: { ...berat(800), fontSize: 13, lineHeight: 17, color: c.tinta2, letterSpacing: 0.4 },
   tr: { paddingVertical: 10, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: c.garis, gap: 4 },
   trAtas: { flexDirection: 'row', gap: 8, alignItems: 'baseline' },
   mapel: { flex: 1, ...berat(700), fontSize: 14, lineHeight: 19, color: c.tinta },
@@ -40,8 +41,8 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   ttdBaris: { flexDirection: 'row', gap: 12, marginTop: 8 },
   ttd: { flex: 1, alignItems: 'center', gap: 2 },
   ttdTulis: { fontFamily: F.tulis, fontSize: 18, lineHeight: 36, color: c.biru },
-  ttdNama: { ...berat(700), fontSize: 12, lineHeight: 16, color: c.tinta, textAlign: 'center', borderTopWidth: 1, borderTopColor: c.tinta, paddingTop: 3, alignSelf: 'stretch' },
-  ttdPeran: { ...berat(500), fontSize: 11.5, lineHeight: 15, color: c.tinta2, textAlign: 'center' },
+  ttdNama: { ...berat(700), fontSize: 13, lineHeight: 17, color: c.tinta, textAlign: 'center', borderTopWidth: 1, borderTopColor: c.tinta, paddingTop: 3, alignSelf: 'stretch' },
+  ttdPeran: { ...berat(500), fontSize: 13, lineHeight: 17, color: c.tinta2, textAlign: 'center' },
 }));
 
 export default function Rapor() {
@@ -139,6 +140,10 @@ export default function Rapor() {
               </View>
             </View>
           </View>
+          <Tombol jenis="utama" ikon="unduh" judul="Unduh rapor (simulasi)" onPress={async () => {
+            const hasil = await unduhBerkas(namaBerkasRapor(anak, r), htmlRapor(anak, r));
+            setDibagi(hasil === 'diunduh' ? 'Berkas rapor simulasi diunduh. Buka di peramban untuk mencetak atau menyimpan sebagai PDF.' : hasil === 'dibagikan' ? 'Ringkasan rapor sudah dibagikan.' : 'Perangkat ini tidak mendukung unduhan.');
+          }} />
           <Tombol jenis="garis" ikon="bagikan" judul="Bagikan ringkasan rapor" onPress={bagikan} />
           {dibagi ? <Teks jenis="kecil" aria-live="polite">{dibagi}</Teks> : null}
           <Teks jenis="kecil">Rapor ini contoh. Sekolah, siswa, dan guru dalam demo Kapur adalah rekaan.</Teks>

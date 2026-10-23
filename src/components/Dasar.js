@@ -30,7 +30,7 @@ const useGayaTeks = buatGaya((c) => StyleSheet.create({
   isi: { ...berat(400), fontSize: 15, lineHeight: 22, color: c.tinta },
   tebal: { ...berat(700), fontSize: 15, lineHeight: 21, color: c.tinta },
   kecil: { ...berat(500), fontSize: 13, lineHeight: 18, color: c.tinta2 },
-  label: { ...berat(700), fontSize: 12, lineHeight: 16, letterSpacing: 0.4, color: c.tinta2 },
+  label: { ...berat(700), fontSize: 13, lineHeight: 17, letterSpacing: 0.4, color: c.tinta2 },
   tulis: { fontFamily: F.tulis, fontSize: 15, lineHeight: 28, color: c.biru },
 }));
 
@@ -67,7 +67,7 @@ const useGayaUmum = buatGaya((c) => StyleSheet.create({
   segmenTeksAktif: { color: c.tinta },
   kerangka: { backgroundColor: c.kartu2, borderRadius: 14 },
   lencana: { borderRadius: 999, paddingHorizontal: 9, paddingVertical: 3, alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 5 },
-  lencanaTeks: { ...berat(700), fontSize: 12, lineHeight: 16 },
+  lencanaTeks: { ...berat(700), fontSize: 13, lineHeight: 17 },
   baris: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 52, paddingVertical: 10 },
   pemisah: { height: 1, backgroundColor: c.garis },
 }));

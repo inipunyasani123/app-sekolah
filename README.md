@@ -13,7 +13,7 @@ Live: https://app-sekolah.pintuweb.id
 - React Native 0.88 + Expo SDK 58, expo-router (web `output: "static"`, satu HTML per rute).
 - Satu kode untuk Android, iOS, dan web. Di web, layar ≥768px menampilkan aplikasi di dalam bingkai ponsel
   dengan panel samping (dirender statis di `src/app/+html.js`, termasuk QR yang dibuat saat build).
-- Font: Young Serif, Plus Jakarta Sans, Playwrite ID (OFL), disubset sendiri. Mode gelap lewat token CSS di web.
+- Font: Young Serif, Plus Jakarta Sans, Playwrite ID (OFL), disubset sendiri. Ilustrasi kapur dan tokoh digambar sendiri (SVG). Mode gelap lewat token CSS di web.
 
 ## Perintah
 

@@ -1,22 +1,18 @@
 # Sumber gambar demo Kapur
 
-Semua usaha, sekolah, siswa, dan guru di demo ini rekaan.
+Semua usaha, sekolah, siswa, guru, dan sopir di demo ini rekaan.
 
-## Tokoh (ilustrasi buatan sendiri)
+## Ilustrasi (buatan sendiri, tanpa foto)
 
-Nayla, Bima, Bu Sekar, Pak Danu, dan lingkaran inisial guru mapel digambar sendiri sebagai SVG di
-`src/components/Avatar.js`. Logo dan ikon aplikasi digambar sendiri (`src/components/Avatar.js`, `design/ikon.mjs`).
-Ikon antarmuka digambar sendiri (`src/components/Ikon.js`). Tidak ada foto wajah orang sungguhan.
+- Tokoh Nayla, Bima, Bu Sekar, Pak Danu, dan lingkaran inisial guru mapel: SVG di `src/components/Avatar.js`.
+  Tidak ada foto atau wajah orang sungguhan.
+- Ilustrasi kapur di atas papan tulis untuk pengumuman, keadaan kosong, dan kartu antar-jemput
+  (buku terbuka, gigi dan sikat, baki bibit, meja pertemuan, lembar soal, kantin sehat, kalender libur,
+  meja kosong, mobil antar-jemput tanpa merek): SVG di `src/components/Ilustrasi.js`.
+- Logo, ikon aplikasi, dan ikon antarmuka: `src/components/Avatar.js`, `src/components/Ikon.js`, `design/ikon.mjs`.
 
-## Foto benda dan tempat (CC0, Wikimedia Commons)
-
-Dipotong 16:9 dan diubah ke WebP (720×405; kebun 640×360).
-
-| Berkas | Sumber | Pembuat | Lisensi |
-| --- | --- | --- | --- |
-| `buku.webp` | https://commons.wikimedia.org/wiki/File:Stack_of_multicolored_books_on_a_table.jpg | Alexander Grey | CC0 1.0 |
-| `kebun.webp` | https://commons.wikimedia.org/wiki/File:5904Farm_Ready_Seedling_Facility_East_West_Seed_Philippines_28.jpg | Judgefloro | CC0 1.0 |
-| `sikat.webp` | https://commons.wikimedia.org/wiki/File:Toothbrush,_Toothpaste,_Dental_Care_(571741).jpg | Steve Buissinne | CC0 1.0 |
+Foto CC0 yang dipakai di versi pertama (tumpukan buku, baki bibit, sikat gigi dari Wikimedia Commons)
+sudah diganti ilustrasi karena tampak buram di ukuran kartu.
 
 ## Font (SIL Open Font License 1.1)
 
