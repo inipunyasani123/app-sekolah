@@ -12,7 +12,7 @@ import { meta } from '@/lib/seo';
 import { useAnak, useHari, usePesan } from '@/lib/pakai';
 import { ubah } from '@/lib/toko';
 import { GURU, SEKOLAH } from '@/lib/data';
-import { fmtJamDariMs, hariIni, relatifHari, fmtTanggal, msPada } from '@/lib/waktu';
+import { fmtWaktuPesan, msPada } from '@/lib/waktu';
 import { balasanOtomatis, jamLayananGuru, pesanAwal } from '@/lib/bangkit';
 
 export function generateMetadata() {
@@ -98,7 +98,6 @@ export default function Pesan() {
   };
 
   const buka = h ? jamLayananGuru(h.ms) : true;
-  let tanggalLalu = null;
   return (
     <KeyboardAvoidingView style={g.akar} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <KepalaRingkas judul={`${guru.panggil} · ${guru.peran.replace('Wali kelas', 'wali kelas')}`} kembali="/" pesanTampil={false} utama />
@@ -114,19 +113,15 @@ export default function Pesan() {
           </View>
           <View role="log" aria-label={`Percakapan dengan ${guru.panggil}`} aria-live="polite" style={{ gap: 8 }}>
             {(h ? daftar : statis).map((m) => {
-              const tgl = h ? hariIni(m.ms) : null;
-              const pemisah = h && tgl !== tanggalLalu;
-              tanggalLalu = tgl;
               const saya = m.dari === 'ortu';
               return (
                 <View key={m.id} style={{ gap: 8 }}>
-                  {pemisah ? <Text style={g.tanggal}>{['Hari ini', 'Kemarin'].includes(relatifHari(tgl, h.hari)) ? relatifHari(tgl, h.hari) : fmtTanggal(tgl, { tahun: false })}</Text> : null}
                   <View style={[g.baris, saya && g.barisSaya]}>
                     {!saya ? <Avatar siapa={anak.wali} ukuran={28} /> : null}
                     <View style={[g.gelembung, saya ? g.saya : g.guru]}>
                       {m.otomatis ? <Text style={g.otomatis}>Balasan simulasi</Text> : null}
                       <Text style={saya ? g.teksSaya : g.teksGuru}>{m.teks}</Text>
-                      <Text style={saya ? g.jamSaya : g.jamGuru}>{h ? `${saya ? 'Kamu' : guru.panggil} · ${fmtJamDariMs(m.ms)}` : (saya ? 'Kamu' : guru.panggil)}</Text>
+                      <Text style={saya ? g.jamSaya : g.jamGuru}>{h ? `${saya ? 'Kamu' : guru.panggil} · ${fmtWaktuPesan(m.ms, h.ms)}` : (saya ? 'Kamu' : guru.panggil)}</Text>
                     </View>
                   </View>
                 </View>
