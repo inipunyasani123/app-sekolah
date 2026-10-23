@@ -111,6 +111,9 @@ function Tips() {
 export default function Root({ children, pathname }) {
   const { headNodes, bodyNodes, htmlAttributes, bodyAttributes } = useServerDocumentContext();
   const tidakAda = !pathname || pathname.includes('not-found');
+  // Skrip bundel tetap dimuat lewat <script defer> di bodyNodes; preload-nya dibuang supaya
+  // JavaScript berprioritas rendah dan tidak bersaing dengan HTML statis saat cat pertama.
+  const kepala = (Array.isArray(headNodes) ? headNodes : [headNodes]).filter((n) => !(n && n.props && n.props.rel === 'preload' && n.props.as === 'script'));
   const qr = jalurQR(`${APP.url}/`);
   return (
     <html lang="id" {...htmlAttributes}>
@@ -131,6 +134,7 @@ export default function Root({ children, pathname }) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="preload" href="/fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/young-serif.woff2" as="font" type="font/woff2" crossOrigin="" />
+        <link rel="preload" href="/fonts/playwrite-id.woff2" as="font" type="font/woff2" crossOrigin="" />
         <script dangerouslySetInnerHTML={{ __html: TEMA_AWAL }} />
         <style id="kapur" dangerouslySetInnerHTML={{ __html: CSS }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -141,7 +145,7 @@ export default function Root({ children, pathname }) {
             <meta name="robots" content="noindex, follow" />
           </>
         ) : null}
-        {headNodes}
+        {kepala}
       </head>
       <body {...bodyAttributes}>
         <div className="panggung">
