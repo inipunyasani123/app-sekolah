@@ -412,7 +412,8 @@ export default function Beranda() {
     <Layar
       kepala={{
         sub,
-        judul: `Buku penghubung ${anak.panggil}`,
+        judul: `Buku penghubung\n${anak.panggil}`,
+        besar: true,
         judulRingkas: 'Buku penghubung',
         children: <Text style={g.tanggal}>{h ? `${fmtTanggal(h.hari)} · ${h.sem.libur ? 'Libur semester' : `Semester ${h.sem.nama.toLowerCase()} ${h.sem.ta}`}` : `Kelas ${kelasAnak(anak)} · SD Rindang Jati`}</Text>,
       }}

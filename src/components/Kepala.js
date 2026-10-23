@@ -30,7 +30,7 @@ const useGaya = buatGaya((c) => StyleSheet.create({
   lencanaTeks: { ...berat(800), fontSize: 12, lineHeight: 15, color: c.pensilTeks },
   sub: { ...berat(600), fontSize: 13, lineHeight: 18, color: c.kapur2, marginTop: 10 },
   judul: { fontFamily: F.serif, fontSize: 26, lineHeight: 32, color: c.kapur, marginTop: 2 },
-  judulBesar: { fontSize: 30, lineHeight: 36 },
+  judulBesar: { fontSize: 32, lineHeight: 38 },
   merek: { fontFamily: F.tulis, fontSize: 19, lineHeight: 28, color: c.kapur, marginLeft: 2 },
   lis: { height: 9, backgroundColor: '#7b5134', borderTopWidth: 2, borderTopColor: '#5e3c25' },
   coretan: { position: 'absolute', top: 0, right: 0, opacity: 0.5 },
