@@ -6,7 +6,8 @@ import { Teks, Kerangka, Lencana, Tautan, STATUS_ABSEN, warnaStatus } from '@/co
 import { KertasGaris, useCap } from '@/components/Kertas';
 import Ikon, { Bintang } from '@/components/Ikon';
 import Avatar from '@/components/Avatar';
-import { Mobil, Cincin } from '@/components/Ilustrasi';
+import { Cincin } from '@/components/Ilustrasi';
+import { Bus } from '@/components/Foto';
 import { F, berat } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
 import { meta } from '@/lib/seo';
@@ -350,7 +351,7 @@ function AntarJemput({ anak, h }) {
   return (
     <View style={g.antar}>
       <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-        <Mobil lebar={96} />
+        <Bus lebar={96} />
         <View style={{ flex: 1, gap: 2 }}>
           <Text style={g.ubinLabel}>{`ANTAR-JEMPUT · RUTE ${a.rute.toUpperCase()}`}</Text>
           <Text style={g.ubinTeks}>{a.judul}</Text>

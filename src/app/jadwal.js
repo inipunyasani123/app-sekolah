@@ -10,7 +10,7 @@ import { useAnak, useHari } from '@/lib/pakai';
 import { GURU, MAPEL, SERAGAM, kelasAnak, guruMapel } from '@/lib/data';
 import { fmtTanggal, hariKe, menitSekarang, jamKeMenit, menitKeJam, tambahHari, awalMinggu, HARI_PENDEK, HARI, pecah } from '@/lib/waktu';
 import { jadwalHari, posisiJadwal, hariSekolah, hariSekolahBerikut, hariNasional, tugas } from '@/lib/bangkit';
-import Ilustrasi from '@/components/Ilustrasi';
+import Foto from '@/components/Foto';
 
 export function generateMetadata() {
   return meta(
@@ -168,7 +168,7 @@ function HariIni({ anak, h }) {
   return (
     <>
       <Kartu style={g.kosong}>
-        <Ilustrasi jenis="libur" tinggi={120} />
+        <Foto jenis="jadwal-libur" tinggi={120} />
         <View style={{ paddingHorizontal: 16, paddingBottom: 16, gap: 6 }}>
         <Teks jenis="subjudul" level={2}>Tidak ada pelajaran hari ini</Teks>
         <Teks jenis="kecil">

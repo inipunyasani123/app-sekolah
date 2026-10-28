@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import Layar from '@/components/Layar';
 import { Teks, Kartu, Kerangka, Segmen, Lencana, Tombol } from '@/components/Dasar';
 import Ikon from '@/components/Ikon';
-import Ilustrasi from '@/components/Ilustrasi';
+import Foto from '@/components/Foto';
 import GridBulan from '@/components/Kalender';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
@@ -80,7 +80,7 @@ function KartuKabar({ k, hari, anak, terbuka, onBuka, baru }) {
       <Pressable role="button" aria-expanded={terbuka} onPress={onBuka} style={({ pressed }) => [g.kepala, pressed && g.ditekan]}>
         {ilus && !terbuka ? (
           <View style={g.gambarKecil} aria-hidden>
-            <Ilustrasi jenis={ilus.jenis} tinggi={64} />
+            <Foto jenis={ilus.jenis} tinggi={64} />
           </View>
         ) : null}
         <View style={{ flex: 1, gap: 4 }}>
@@ -98,7 +98,7 @@ function KartuKabar({ k, hari, anak, terbuka, onBuka, baru }) {
         <>
           {ilus ? (
             <View style={g.gambar}>
-              <Ilustrasi jenis={ilus.jenis} tinggi="100%" label={ilus.alt} />
+              <Foto jenis={ilus.jenis} tinggi="100%" label={ilus.alt} />
             </View>
           ) : null}
           <View style={g.isi}>

@@ -181,15 +181,15 @@ export function agenda(hari, sem, anak) {
   return [...unik.values()].sort((a, b) => (a.mulai < b.mulai ? -1 : a.mulai > b.mulai ? 1 : 0));
 }
 
-// Ilustrasi kapur untuk tiap pengumuman (components/Ilustrasi.js).
+// Foto asli untuk tiap pengumuman (components/Foto.js; sumber di assets/foto/SUMBER.md).
 export const ILUS_KABAR = {
-  literasi: { jenis: 'buku', alt: 'Ilustrasi kapur: buku terbuka dengan pembatas kuning' },
-  pertemuan: { jenis: 'pertemuan', alt: 'Ilustrasi kapur: meja dan kursi pertemuan dengan balon percakapan' },
-  gigi: { jenis: 'gigi', alt: 'Ilustrasi kapur: gigi dan sikat gigi' },
-  kebun: { jenis: 'bibit', alt: 'Ilustrasi kapur: baki bibit tanaman di bawah matahari' },
-  sas: { jenis: 'sas', alt: 'Ilustrasi kapur: lembar soal bercentang dan pensil' },
-  kantin: { jenis: 'kantin', alt: 'Ilustrasi kapur: botol air, segelas susu, dan apel' },
-  libur: { jenis: 'libur', alt: 'Ilustrasi kapur: kalender dan matahari' },
+  literasi: { jenis: 'buku', alt: 'Foto halaman buku yang sedang dibalik' },
+  pertemuan: { jenis: 'pertemuan', alt: 'Foto ruang pertemuan dengan meja panjang dan kursi' },
+  gigi: { jenis: 'gigi', alt: 'Foto dua sikat gigi bambu di atas tikar' },
+  kebun: { jenis: 'bibit', alt: 'Foto deretan bibit tanaman muda di pot kecil' },
+  sas: { jenis: 'sas', alt: 'Foto pena warna-warni di atas kertas bergaris' },
+  kantin: { jenis: 'kantin', alt: 'Foto irisan belimbing dan apel di dalam mangkuk' },
+  libur: { jenis: 'libur', alt: 'Foto halaman bermain sekolah dengan tangga dan pohon' },
 };
 
 export function pengumuman(hari, sem, anak) {

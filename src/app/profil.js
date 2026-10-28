@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Layar from '@/components/Layar';
 import { Teks, Kartu, Tombol, Lencana, Pemisah } from '@/components/Dasar';
 import Avatar from '@/components/Avatar';
+import Foto from '@/components/Foto';
 import { berat } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
 import { meta } from '@/lib/seo';
@@ -65,6 +66,9 @@ export default function Profil() {
       })}
       <Kartu style={{ gap: 2 }}>
         <Teks jenis="bagian" level={2}>Sekolah</Teks>
+        <View style={{ borderRadius: 12, overflow: 'hidden', marginVertical: 6 }}>
+          <Foto jenis="sekolah" tinggi={150} label="Foto gedung sekolah dan halaman" />
+        </View>
         <Baris k="Nama" v={`${SEKOLAH.nama} (rekaan)`} />
         <Baris k="Alamat" v={`${SEKOLAH.alamat} (alamat rekaan)`} />
         <Baris k="Kepala sekolah" v={SEKOLAH.kepala} />

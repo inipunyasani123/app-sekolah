@@ -5,7 +5,7 @@ import Layar from '@/components/Layar';
 import { Teks, Kartu, Kerangka, Tombol, Lencana } from '@/components/Dasar';
 import { GrafikGaris, KeteranganGrafik } from '@/components/Grafik';
 import Avatar from '@/components/Avatar';
-import Ilustrasi from '@/components/Ilustrasi';
+import Foto from '@/components/Foto';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
 import { meta } from '@/lib/seo';
@@ -72,7 +72,7 @@ export default function NilaiMapel() {
     <Layar kepala={{ judul: m.pendek, sub: m.nama !== m.pendek ? m.nama : `Nilai ${anak.panggil}`, kembali: '/nilai' }}>
       {!ada ? (
         <Kartu style={{ gap: 10, padding: 0, overflow: 'hidden' }}>
-          <Ilustrasi jenis="kosong" tinggi={120} />
+          <Foto jenis="nilai-kosong" tinggi={120} />
           <View style={{ paddingHorizontal: 16, paddingBottom: 16, gap: 10 }}>
           <Teks jenis="tebal">{`${m.nama} mulai diajarkan di kelas ${m.mulai}.`}</Teks>
           <Teks jenis="kecil">{`${anak.panggil} sekarang kelas ${anak.tingkat}, jadi belum ada nilai untuk mapel ini. Ganti anak lewat tombol di pojok kanan atas.`}</Teks>

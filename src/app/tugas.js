@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Layar from '@/components/Layar';
 import { Teks, Kerangka, Chip, Lencana, Tombol } from '@/components/Dasar';
-import Ilustrasi from '@/components/Ilustrasi';
+import Foto from '@/components/Foto';
 import Ikon, { Bintang } from '@/components/Ikon';
 import { berat, F } from '@/lib/fonts';
 import { buatGaya, useWarna } from '@/lib/pakai-tema';
@@ -136,7 +136,7 @@ export default function Tugas() {
         tampil.map((x) => <KartuTugas key={x.id} t={x} hari={h.hari} cek={cek[x.id]} onCek={() => tandai(x.id)} />)
       ) : (
         <View style={g.kosong}>
-          <Ilustrasi jenis="kosong" tinggi={120} />
+          <Foto jenis="tugas-kosong" tinggi={120} />
           <View style={{ padding: 16, gap: 10 }}>
             <Teks jenis="tebal">{h.sem.libur ? 'Tidak ada tugas selama libur semester.' : filter === 'belum' ? 'Semua tugas sudah dikumpulkan.' : 'Tidak ada tugas di daftar ini.'}</Teks>
             <Teks jenis="kecil">Tugas baru dari guru muncul di sini lengkap dengan tenggat dan cara mengumpulkan.</Teks>
