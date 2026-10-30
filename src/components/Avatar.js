@@ -1,26 +1,8 @@
 import { Svg, Path, Circle, Ellipse, Rect, G, SvgText } from './svg';
 import { F } from '@/lib/fonts';
 
-// Ilustrasi tokoh buatan sendiri (bukan foto/wajah orang sungguhan).
+// Ilustrasi tokoh buatan sendiri (bukan foto/wajah orang sungguhan), berwajah polos tanpa mata dan mulut.
 const BADAN = (lebar = 0) => `M${10 - lebar} 55.5C13 46 22 42.5 32 42.5S51 46 ${54 + lebar} 55.5A32 32 0 0 1 ${10 - lebar} 55.5Z`;
-
-function Mata({ y = 31, jarak = 5 }) {
-  return (
-    <G>
-      <Circle cx={32 - jarak} cy={y} r={1.7} fill="#1c2621" />
-      <Circle cx={32 + jarak} cy={y} r={1.7} fill="#1c2621" />
-    </G>
-  );
-}
-
-function Pipi({ y = 35.5 }) {
-  return (
-    <G>
-      <Circle cx={23.8} cy={y} r={2.3} fill="#e8846c" opacity={0.45} />
-      <Circle cx={40.2} cy={y} r={2.3} fill="#e8846c" opacity={0.45} />
-    </G>
-  );
-}
 
 const TOKOH = {
   nayla: () => (
@@ -34,9 +16,6 @@ const TOKOH = {
       <Ellipse cx={32} cy={31.5} rx={11} ry={12} fill="#c98c5e" />
       <Path d="M21 30.5c3.5-.6 8.7-2.8 12.2-6.6 2.2 3 5.6 5.4 9.8 6.6-.6-6.8-5-11.2-11-11.2s-10.4 4.4-11 11.2z" fill="#22201e" />
       <Rect x={39} y={20.5} width={7} height={3.2} rx={1.6} fill="#2a5795" transform="rotate(28 42.5 22)" />
-      <Mata />
-      <Pipi />
-      <Path d="M28.6 37.2c1.9 1.9 4.9 1.9 6.8 0" fill="none" stroke="#5b2e1c" strokeWidth={1.5} strokeLinecap="round" />
     </G>
   ),
   bima: () => (
@@ -51,9 +30,6 @@ const TOKOH = {
       <Ellipse cx={43.4} cy={32.5} rx={2.2} ry={3} fill="#bb7c4f" />
       <Path d="M20.4 29c-.5-8.4 4.8-14 11.6-14 7.2 0 12.3 5.6 11.6 14-2.8-2.6-6-4-9.4-4.2-3.4 1.6-8.4 1.8-11.2.6-1.2.9-2 2.2-2.6 3.6z" fill="#1d1a18" />
       <Path d="M31 15.4c1-2.4 3-3.4 5-3" fill="none" stroke="#1d1a18" strokeWidth={2} strokeLinecap="round" />
-      <Mata y={31.5} jarak={4.8} />
-      <Pipi y={36} />
-      <Path d="M27.6 37c2.4 3 6.4 3 8.8 0" fill="#7a2f22" stroke="#5b2e1c" strokeWidth={1.2} strokeLinejoin="round" />
     </G>
   ),
   sekar: () => (
@@ -64,9 +40,6 @@ const TOKOH = {
       <Ellipse cx={32} cy={31.5} rx={10.2} ry={11.4} fill="#cf9566" />
       <Path d="M21.8 27.5c1.6-5.4 5.6-8.3 10.2-8.3s8.6 2.9 10.2 8.3c-3-2.2-6.6-3.3-10.2-3.3s-7.2 1.1-10.2 3.3z" fill="#3c7a62" />
       <Circle cx={43.5} cy={41} r={1.6} fill="#f2b632" />
-      <Mata y={31.5} jarak={4.6} />
-      <Pipi y={35.8} />
-      <Path d="M28.8 37.2c1.8 1.7 4.6 1.7 6.4 0" fill="none" stroke="#5b2e1c" strokeWidth={1.5} strokeLinecap="round" />
     </G>
   ),
   danu: () => (
@@ -82,12 +55,6 @@ const TOKOH = {
       <Rect x={28.5} y={38} width={7} height={6} rx={2} fill="#9a6440" />
       <Ellipse cx={32} cy={31.5} rx={11} ry={12} fill="#a96f47" />
       <Path d="M20.8 28.5c-.2-8 4.8-13.2 11.4-13.2 6.8 0 11.6 5 11 13-3.2-3.4-8-5.2-13-4.8-3.4.3-6.8 2.2-9.4 5z" fill="#161412" />
-      <Circle cx={27} cy={31.2} r={4} fill="none" stroke="#1c2621" strokeWidth={1.5} />
-      <Circle cx={37} cy={31.2} r={4} fill="none" stroke="#1c2621" strokeWidth={1.5} />
-      <Path d="M31 31.2h2M23 30.6l-2-.6M41 30.6l2-.6" stroke="#1c2621" strokeWidth={1.5} strokeLinecap="round" />
-      <Circle cx={27} cy={31.4} r={1.4} fill="#1c2621" />
-      <Circle cx={37} cy={31.4} r={1.4} fill="#1c2621" />
-      <Path d="M28.4 37.6c2 1.6 5.2 1.6 7.2 0" fill="none" stroke="#4a2515" strokeWidth={1.5} strokeLinecap="round" />
     </G>
   ),
 };
